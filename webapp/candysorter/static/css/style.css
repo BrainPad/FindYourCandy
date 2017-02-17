@@ -1,0 +1,75 @@
+@charset "UTF-8";
+/* all */
+html,
+body { width: 100%; height: 100%; }
+body { color: #fff; font-family: "Roboto", sans-serif; font-weight: 300; line-height: 1.5; background: #222; -webkit-font-smoothing: antialiased; overflow: hidden; }
+input { font-size: 100%; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+/* speech */
+.speech { position: absolute; width: 100%; height: 100%; font-size: 36px; font-weight: 100; overflow: hidden; }
+.speech-in { display: flex; justify-content: center; align-items: center; position: absolute; width: 100%; height: 100%; z-index: 1; }
+.speech-mic { width: 120px; height: 120px; padding: 40px; border-radius: 100%; border: solid 0 #444; background: #333; cursor: pointer; box-sizing: content-box; }
+.speech-mic img { width: 100%; }
+.speech-out { display: flex; justify-content: center; align-items: center; position: absolute; width: 100%; height: 100%; padding: 50px 100px; }
+/* nl */
+.nl { display: flex; justify-content: center; align-items: center; position: absolute; width: 100%; height: 100%; padding: 20px; overflow: hidden; }
+.nl-depend { position: relative; height: 20px; }
+.nl-depend dd { position: absolute; height: 20px; background: url(/static/images/arrow-r.png) right center no-repeat, url(/static/images/arrow-bg.png) center center repeat-x; transform-origin: left; }
+.nl-depend dd.left { background: url(/static/images/arrow-l.png) left center no-repeat, url(/static/images/arrow-bg.png) center center repeat-x; transform-origin: right; }
+.nl-inner { max-width: 100%; }
+.nl-syntax { position: relative; white-space: nowrap; overflow: hidden; }
+.nl-syntax dl { display: inline-block; color: #ccc; font-size: 14px; letter-spacing: 0.1em; padding: 20px; text-align: center; vertical-align: top; }
+.nl-label { text-transform: lowercase; }
+.nl-word { color: #fff; font-size: 60px; font-weight: 100; }
+.nl-tag { margin-bottom: 20px; }
+/* force */
+.force { position: absolute; width: 100%; height: 100%; overflow: hidden; }
+.force svg { position: absolute; }
+.force line { stroke: rgba(255,255,255,0.3); stroke-width: 1; }
+.force text { fill: #fff; font-size: 36px; font-weight: 100; text-anchor: middle; alignment-baseline: middle; }
+.force circle { opacity: 0.8; }
+.force-txt { position: absolute; color: #fff; font-size: 48px; font-weight: 100; max-width: 80%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+/* plot */
+.plot { position: absolute; width: 100%; height: 100%; overflow: hidden; }
+.plot dd { position: absolute; width: 80px; height: 80px; margin: -40px 0 0 -40px; border-radius: 100%; opacity: 0.8 }
+.plot dd i { display: block; width: 100%; height: 100%; border-radius: 100%; background-size: cover; opacity: 0.5; filter: grayscale(100%); }
+/* cam */
+.cam { display: flex; justify-content: center; align-items: center; position: absolute; width: 100%; height: 100%; overflow: hidden; }
+.cam-img { background-size: cover; }
+.cam svg { width: 100%; }
+.cam polygon { fill: rgba(0,0,0,0); stroke: #fff; stroke-width: 2; stroke-dasharray: 10; }
+/* thanks */
+.thanks { position: absolute; width: 100%; height: 100%; font-size: 48px; font-weight: 100; overflow: hidden; }
+.thanks div { display: flex; justify-content: center; align-items: center; position: absolute; width: 100%; height: 100%; }
+/* color */
+.label-0 circle { fill: rgba(0,0,0,0); }
+.label-1 circle { fill: #ef5350; }
+.label-2 circle { fill: #42A5F5; }
+.label-3 circle { fill: #66BB6A; }
+.label-4 circle { fill: #FFCA28; }
+.label-5 circle { fill: #AB47BC; }
+.label-6 circle { fill: #26A69A; }
+.label-7 circle { fill: #FFEE58; }
+.label-8 circle { fill: #FF7043; }
+.label-9 circle { fill: #EC407A; }
+.label-10 circle { fill: #7E57C2; }
+dd.label-1 { background: #ef5350; }
+dd.label-2 { background: #42A5F5; }
+dd.label-3 { background: #66BB6A; }
+dd.label-4 { background: #FFCA28; }
+dd.label-5 { background: #AB47BC; }
+dd.label-6 { background: #26A69A; }
+dd.label-7 { background: #FFEE58; }
+dd.label-8 { background: #FF7043; }
+dd.label-9 { background: #EC407A; }
+dd.label-10 { background: #7E57C2; }
+polygon.label-1 { stroke: #ef5350; }
+polygon.label-2 { stroke: #42A5F5; }
+polygon.label-3 { stroke: #66BB6A; }
+polygon.label-4 { stroke: #FFCA28; }
+polygon.label-5 { stroke: #AB47BC; }
+polygon.label-6 { stroke: #26A69A; }
+polygon.label-7 { stroke: #FFEE58; }
+polygon.label-8 { stroke: #FF7043; }
+polygon.label-9 { stroke: #EC407A; }
+polygon.label-10 { stroke: #7E57C2; }

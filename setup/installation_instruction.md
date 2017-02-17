@@ -42,7 +42,7 @@ Note: due to unavailability of CDVU-06IP extender unit.
 - During setup you need  a LCD display, a keyboard and a mouse. please prepare.
 - Install linux and softwares
   - Ubuntu 16.04.1 Server 64bit (you may also try Desktop 64bit)
-  - DEMO software
+    - See [linux box.md](./linux_box.md)
 
 ### Step3: Camera Calibation
 
@@ -56,8 +56,6 @@ The following instructions illustrates how to adjust the camera position.
 
 ![](./image/camera_calibration.png)
 
-　
-
 ### Step4: Robot Arm Caribration
 
 1. Execute 'script/robot_tune.py' to start tuning the coordinate of arm.
@@ -69,8 +67,6 @@ The following instructions illustrates how to adjust the camera position.
 
 ![](./image/robot_calibration.png)
 
-
-
 ### Step5: Tablet
 1. Bootup Nexus9 and login with a google account for demo.
 2. Update firmware
@@ -79,3 +75,8 @@ ChromeCast Ultra
 4. Follow the “Set up Chromecast” on the [google support page](
 https://support.google.com/chromecast/answer/2998456?hl=en)
 \(there is instruction for Android 4.1 and higher\).
+
+
+### Step6: Demo Application
+- Run demo Application
+  - See [application_setup.md](./application_setup.md)

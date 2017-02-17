@@ -1,0 +1,67 @@
+@charset "UTF-8";
+/* speech */
+.speech { opacity: 0; transition: all .3s; }
+.mode-speech-start .speech { opacity: 1; }
+.mode-nl-loaded .speech { opacity: 0; transform: translate(-100px, 0); }
+/* speech in/out */
+.mode-speech-in .speech-mic { animation: speech-in .8s infinite alternate; }
+@keyframes speech-in {
+0% {
+border-width: 0;
+}
+100% {
+border-width: 40px;
+}
+}
+.mode-speech-out .speech-mic { animation: speech-out .3s forwards; }
+@keyframes speech-out {
+0% {
+opacity: 1;
+transform: scale(1);
+}
+100% {
+opacity: 0;
+transform: scale(0);
+}
+}
+/* nl loaded */
+.nl-word { opacity: 0; transform: translate(100px, 0); transition: all .4s; }
+.nl-tag,
+.nl-pos { opacity: 0; transform: translate(0, 100px); transition: all .4s; }
+.nl-label { opacity: 0; transition: all .4s; }
+.nl-depend dd { opacity: 0; transform: scale(0, 1); transition: opacity .6s, transform .6s; }
+.mode-nl-loaded .nl-word { opacity: 1; transform: translate(0, 0); }
+.mode-nl-loaded .nl-tag,
+.mode-nl-loaded .nl-pos { opacity: 1; transform: translate(0, 0); }
+.mode-nl-loaded .nl-label { opacity: 1; }
+.mode-nl-loaded .nl-depend dd { opacity: 0.4; transform: scale(1, 1); }
+/* nl  */
+.nl { transition: all .3s; }
+.mode-force-start .nl { opacity: 0; transform: scale(0.5); }
+/* force */
+.force { transition: all .3s; }
+.mode-plot-end .force { opacity: 0; transform: scale(0); }
+/* plot */
+.plot dd { transform: scale(0); transition: all .3s; }
+.mode-plot-start .plot dd { transform: scale(1); }
+.mode-plot-end .plot dd { transform: scale(0); transition-delay: 0s!important; }
+.mode-plot-end .plot dd.nearest { transform: scale(5); opacity: 1; transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+/* cam */
+.cam { opacity: 0; transform: scale(0.8); transition: all .3s; }
+.mode-cam-start .cam { opacity: 1; transform: scale(1); }
+.mode-cam-start .plot dd.nearest { opacity: 0; transform: scale(0); }
+.mode-cam-start polygon { animation: cam 100s linear forwards; }
+@keyframes cam {
+0% {
+stroke-dashoffset: 10000;
+}
+100% {
+stroke-dashoffset: 0;
+}
+}
+/* thanks  */
+.thanks div { opacity: 0; transform: translate(100px, 0); transition: all .3s; }
+.mode-thanks-start .cam { opacity: 0; }
+.mode-thanks-start .thanks div:first-child { opacity: 1; transform: translate(0, 0); }
+.mode-thanks-end .thanks div:first-child { opacity: 0; transform: translate(-100px, 0); }
+.mode-thanks-end .thanks div:last-child { opacity: 1; transform: translate(0, 0); }

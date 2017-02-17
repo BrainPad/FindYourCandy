@@ -18,8 +18,7 @@ $ sudo apt-get install python-dev
 ```
 $ wget https://bootstrap.pypa.io/get-pip.py
 $ sudo python get-pip.py
-$ sudo pip install numpy
-$ sudo pip install tensorflow
+$ sudo pip install numpy==1.12.0
 ```
 
 ## OpenCV3.2 installation
@@ -33,6 +32,7 @@ $ git clone https://github.com/opencv/opencv_contrib.git
 $ git clone https://github.com/opencv/opencv_extra.git
 $ cd ~/opencv_from_git/opencv/
 $ mkdir build
+$ cd build
 $ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules/ -D BUILD_DOCS=ON -D WITH_TBB=ON ..
 $ make -j7
 $ sudo make install
