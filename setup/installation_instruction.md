@@ -10,8 +10,7 @@ setup
 - Document camera
   - [Ipevo Ziggi-HD](https://www.amazon.com/dp/B01530XGMA)
   - [Ipevo Height Extension Stand](https://www.amazon.com/dp/B00CTIF2O0)
-- A3 marker sheet
-  - 'image/Marker_A3_rev01.pdf'
+- [A3 marker sheet](./image/marker_paper.pdf)
   - for camera and robot arm to adjust their position
 - Linux Box
   - [Intel NUC kit](https://www.amazon.com/dp/B01DG1SEES)
