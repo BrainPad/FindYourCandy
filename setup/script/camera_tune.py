@@ -4,8 +4,7 @@ import cv2
 import sys
 import time
 
-# TODO: this path should be changed accordingly.
-sys.path.append('/home/brainpad/candy-sorter-old/webapp')
+sys.path.append('/home/brainpad/CandySorter/webapp')
 from candysorter.models.images.calibrate import ImageCalibrator
 
 
@@ -47,12 +46,12 @@ capture.set(3,1920)
 capture.set(4,1080)
 
 
-# Attempt to display using cv2 (doesn't work)
+# Attempt to display using cv2 
 cv2.namedWindow('Tuning Camera',cv2.WINDOW_KEEPRATIO | cv2.WINDOW_NORMAL)
 cv2.resizeWindow('Tuning Camera', 960, 540)
 cv2.setMouseCallback('Tuning Camera', mouse_event)
 
-#for i in range(0, 10):
+
 while True :
   time.sleep(0.3)
   if ( capture.isOpened ):
