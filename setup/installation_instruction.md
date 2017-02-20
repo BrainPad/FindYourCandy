@@ -44,7 +44,6 @@ Note: due to unavailability of CDVU-06IP extender unit.
     - See [linux box.md](./linux_box.md)
 
 ### Step3: Camera Calibation
-
 The following instructions illustrates how to adjust the camera position.
 
 1. Boot up linux box and login the desktop.
@@ -56,9 +55,8 @@ The following instructions illustrates how to adjust the camera position.
 ![](./image/camera_calibration.png)
 
 ### Step4: Robot Arm Caribration
-
 1. Execute 'script/robot_tune.py' to start tuning the coordinate of arm.
-2. To avoid damaging the robot arm during this process, hold the arm first by your hand. And then push the release button (which is marked ‘unlock’ ) on the other hand. After releasing the robot arm, it may fall instantly.
+2. To avoid damaging the robot arm during this process, hold the arm by your hand first. And then push the release button (which is marked ‘unlock’ ) with the other hand. Please be aware when releasing the robot arm, it may start falling instantly.
 3. You slowly land the arm edge to the center of “Maker A”.
 4. Hit “Enter” key.
 5. Repeat above 2 and 3 for Marker D and E.
@@ -69,13 +67,19 @@ The following instructions illustrates how to adjust the camera position.
 ### Step5: Tablet
 1. Bootup Nexus9 and login with a google account for demo.
 2. Update firmware
-3. Connect GL0402 (Ultra Adapter) to Nexus9’s OTG connector.
-ChromeCast Ultra
+3. Connect 'GL0402' (Ultra Adapter) to Nexus9’s OTG connector.
+(When you buy ChromeCast Ultra, it comes with one 'GL0402'. So you need extra ChromeCast Ultra to just get a 'GL0402' for Nexus9.)
 4. Follow the “Set up Chromecast” on the [google support page](
 https://support.google.com/chromecast/answer/2998456?hl=en)
 \(there is instruction for Android 4.1 and higher\).
 
-
 ### Step6: Demo Application
-- Run demo Application
-  - See [application_setup.md](./application_setup.md)
+1. GCP for API service
+This demo is based on GCP. Create a credential associated to your project.
+(see https://console.developers.google.com/apis/ )
+```
+$ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_path"
+```
+2. Configure and run demo
+  - See [README.md](../robot-arm) for robot-arm
+  - See [README.md](../webapp) for webapp

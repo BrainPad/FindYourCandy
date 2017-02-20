@@ -1,31 +1,20 @@
-### base setup
-```
-$ sudo chmod 777 /dev/ttyUSB0
-$ sudo chmod 777 /dev/video0
-$ cd ~
-$ git clone git@github.com:BrainPad/CandySorter.git
-$ cd ~/CandySorter
-$ sudo pip install -r robot-arm/requirements.txt
-$ sudo pip install -r webapp/requirements.txt
-```
+App setup
+===
+
+Prior to this instructions, make sure whole network is working good.
+Here we quote ip address of Linux box as xxx.xxx.xxx.xxx.
 
 ### word2vec
 ```
-$ mkdir -p ~/CandySorter/webapp/candysorter/resources/models
+$ mkdir -p ~/FindYourCandy/webapp/FindYourCandy/resources/models
 # download word2vec model from https://github.com/mmihaltz/word2vec-GoogleNews-vectors to the 'models' directory
 ```
 
-### GCP setup
-```
-# create your own project and credentials for API service.
-# see also: (add links of each API's documentations)
-$ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_path"
-```
 
 ### Web appの起動
 ```
-$ cd ~/CandySorter/webapp
+$ cd ~/FindYourCandy/webapp
 $ export FLASK_ENV='stg'
 $ python run.py
-# access http://localhost:5000/predict
+# access http://xxx.xxx.xxx.xxx:5000/predict
 ```
