@@ -10,6 +10,8 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
+vision_client = vision.Client()
+
 
 class Candy(object):
     def __init__(self, box_coords, box_dims, box_centroid, cropped_img):
@@ -23,34 +25,46 @@ class CandyDetector(object):
     def __init__(self,
                  histgram_band=(80, 200),
                  histgram_thres=2.7e-3,
-                 binarize_block=501,
+                 edge3_thres=250,
+                 edge5_thres=230,
                  margin=(20, 20),
-                 opening_iter=2,
                  closing_iter=5,
+                 opening_iter=2,
+                 erode_iter=10,
+                 dilate_iter=3,
+                 bg_size_filter=2000,
                  sure_fg_thres=0.5,
-                 restore_fg_thres=0.0,
-                 dilate_iter=3):
+                 restore_fg_thres=0.0):
         self.histgram_band = histgram_band
         self.histgram_thres = histgram_thres
-        self.binarize_block = binarize_block
+
+        self.edge3_thres = edge3_thres
+        self.edge5_thres = edge5_thres
         self.margin = margin
-        self.opening_iter = opening_iter
+
         self.closing_iter = closing_iter
+        self.opening_iter = opening_iter
+        self.erode_iter = erode_iter
+        self.dilate_iter = dilate_iter
+
+        self.bg_size_filter = bg_size_filter
         self.sure_fg_thres = sure_fg_thres
         self.restore_fg_thres = restore_fg_thres
-        self.dilate_iter = dilate_iter
 
     @classmethod
     def from_config(cls, config):
         return cls(histgram_band=config.CANDY_DETECTOR_HISTGRAM_BAND,
                    histgram_thres=config.CANDY_DETECTOR_HISTGRAM_THRES,
-                   binarize_block=config.CANDY_DETECTOR_BINARIZE_BLOCK,
+                   edge3_thres=config.CANDY_DETECTOR_EDGE3_thres,
+                   edge5_thres=config.CANDY_DETECTOR_EDGE5_thres,
                    margin=config.CANDY_DETECTOR_MARGIN,
-                   opening_iter=config.CANDY_DETECTOR_OPENING_ITER,
                    closing_iter=config.CANDY_DETECTOR_CLOSING_ITER,
+                   opening_iter=config.CANDY_DETECTOR_OPENING_ITER,
+                   erode_iter=config.CANDY_DETECTOR_ERODE_ITER,
+                   dilate_iter=config.CANDY_DETECTOR_DILATE_ITER,
+                   bg_size_filter=config.CANDY_DETECTOR_BG_SIZE_FILTER,
                    sure_fg_thres=config.CANDY_DETECTOR_SURE_FG_THRES,
-                   restore_fg_thres=config.CANDY_DETECTOR_RESTORE_FG_THRES,
-                   dilate_iter=config.CANDY_DETECTOR_DILATE_ITER)
+                   restore_fg_thres=config.CANDY_DETECTOR_RESTORE_FG_THRES)
 
     def detect(self, img):
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -62,33 +76,36 @@ class CandyDetector(object):
             return []
 
         # Binarize
-        binarized = cv2.adaptiveThreshold(img_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                          cv2.THRESH_BINARY_INV, self.binarize_block, 2)
+        _, binarized = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
         # Edge
-        kernel_laplacian_3x3 = np.array([[1, 1, 1],
-                                        [1, -8, 1],
-                                        [1, 1, 1]], np.float32)
-        kernel_gaussian = np.array([[1, 2, 1],
-                                    [2, 4, 2],
-                                    [1, 2, 1]], np.float32) / 16
-        kernel_laplacian_5x5 = np.array([[-1, -3, -4, -3, -1],
-                                         [-3, 0, 6, 0, -3],
-                                         [-4, 6, 20, 6, -4],
-                                         [-3, 0, 6, 0, -3],
-                                         [-1, -3, -4, -3, -1]], np.float32)
+        kernel_laplacian_3x3 = np.float32([
+            [1, 1, 1],
+            [1, -8, 1],
+            [1, 1, 1]
+        ])
+        kernel_gaussian = np.float32([
+            [1, 2, 1],
+            [2, 4, 2],
+            [1, 2, 1]
+        ]) / 16
+        kernel_laplacian_5x5 = np.float32([
+            [-1, -3, -4, -3, -1],
+            [-3, 0, 6, 0, -3],
+            [-4, 6, 20, 6, -4],
+            [-3, 0, 6, 0, -3],
+            [-1, -3, -4, -3, -1]
+        ])
 
-        img_edge_3 = 255 - cv2.filter2D(img_gray, -1, kernel_laplacian_3x3)
-        img_edge_3 = cv2.filter2D(img_edge_3, -1, kernel_gaussian)
-        _, binarized_edge_3 = cv2.threshold(img_edge_3, 0, 255,
-                                            cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        edge3 = 255 - cv2.filter2D(img_gray, -1, kernel_laplacian_3x3)
+        edge3 = cv2.filter2D(edge3, -1, kernel_gaussian)
+        _, binarized_edge3 = cv2.threshold(edge3, self.edge3_thres, 255, cv2.THRESH_BINARY_INV)
 
-        img_edge_5 = 255 - cv2.filter2D(img_gray, -1, kernel_laplacian_5x5)
-        img_edge_5 = cv2.filter2D(img_edge_5, -1, kernel_gaussian)
-        _, binarized_edge_5 = cv2.threshold(img_edge_5, 0, 255,
-                                            cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        edge5 = 255 - cv2.filter2D(img_gray, -1, kernel_laplacian_5x5)
+        edge5 = cv2.filter2D(edge5, -1, kernel_gaussian)
+        _, binarized_edge5 = cv2.threshold(edge5, self.edge5_thres, 255, cv2.THRESH_BINARY_INV)
 
-        binarized_edge = cv2.bitwise_or(binarized_edge_3, binarized_edge_5)
+        binarized_edge = cv2.bitwise_or(binarized_edge3, binarized_edge5)
         binarized = cv2.bitwise_or(binarized, binarized_edge)
 
         # Fill the margin with black
@@ -98,46 +115,62 @@ class CandyDetector(object):
         binarized[:, -self.margin[1]:] = 0
 
         # Remove noise
-        kernel = np.ones((5, 5), np.uint8)
+        kernel = np.ones((3, 3), np.uint8)
         closed = cv2.morphologyEx(binarized, cv2.MORPH_CLOSE, kernel, iterations=self.closing_iter)
+
+        closed, contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(closed, contours, -1, 255, -1)
+
         opened = cv2.morphologyEx(closed, cv2.MORPH_OPEN, kernel, iterations=self.opening_iter)
 
+        # Erode
+        eroded = cv2.erode(closed, kernel, iterations=self.erode_iter)
+
         # Sure background
-        sure_bg = cv2.dilate(opened, kernel, iterations=self.dilate_iter)
+        bg = cv2.dilate(opened, kernel, iterations=self.dilate_iter)
+        n, markers_bg, sizes, cogs = cv2.connectedComponentsWithStats(bg)
+        sizes = sizes.take(4, axis=1)
+        sure_bg = bg.copy()
+        for i in range(1, n):
+            if sizes[i] < self.bg_size_filter:
+                sure_bg -= (markers_bg == i).astype(np.uint8) * 255
 
         # Sure foreground
-        dist = cv2.distanceTransform(opened, cv2.DIST_L2, 5)
-        _, fg = cv2.threshold(dist, self.sure_fg_thres * dist.max(), 255, cv2.THRESH_BINARY)
+        dist = cv2.distanceTransform(eroded, cv2.DIST_L2, 5)
+        if self.sure_fg_thres <= 1.0:
+            _, fg = cv2.threshold(dist, self.sure_fg_thres * dist.max(), 255, cv2.THRESH_BINARY)
+        else:
+            _, fg = cv2.threshold(dist, self.sure_fg_thres, 255, cv2.THRESH_BINARY)
         fg = np.uint8(fg)
 
         # Restore foreground
-        _, markers_opened = cv2.connectedComponents(opened)
+        _, markers_eroded = cv2.connectedComponents(eroded)
 
-        oids_opened, counts_opened = np.unique(markers_opened, return_counts=True)
-        oids_fg, counts_fg = np.unique(markers_opened * (fg > 0), return_counts=True)
+        oids_eroded, counts_eroded = np.unique(markers_eroded, return_counts=True)
+        oids_fg, counts_fg = np.unique(markers_eroded * (fg > 0), return_counts=True)
 
         temp = np.array([
             counts_fg[np.where(oids_fg == oid)[0][0]] if oid in oids_fg else 0
-            for oid in oids_opened
+            for oid in oids_eroded
         ])
-        oids_sure_fg = oids_opened[
-            (oids_opened > 0) & ~(1.0 * temp / counts_opened > self.restore_fg_thres)
+        oids_sure_fg = oids_eroded[
+            (oids_eroded > 0) & ~(1.0 * temp / counts_eroded > self.restore_fg_thres)
         ]
         sure_fg = np.bool_(fg)
         for oid in oids_sure_fg:
-            sure_fg = np.logical_or(sure_fg, markers_opened == oid)
+            sure_fg = np.logical_or(sure_fg, markers_eroded == oid)
         sure_fg = 255 * np.uint8(sure_fg)
 
         # Unknown region
-        unknown = cv2.subtract(sure_bg, sure_fg)
+        # unknown = cv2.subtract(sure_bg, sure_fg)
 
         # Label
         _, markers = cv2.connectedComponents(sure_fg)
-        markers = markers + 1
-        markers[unknown == 255] = 0
 
         # Segmentate
-        markers = cv2.watershed(img, markers)
+        _, markers = cv2.distanceTransformWithLabels(255 - sure_fg, cv2.DIST_L2, 5, labels=markers)
+        markers = (sure_bg // 255) * markers
+        markers += 1
 
         candies = []
         for i in [i for i in list(np.unique(markers)) if i > 1]:
@@ -229,7 +262,6 @@ def _bounding_box_of(contour):
 
 
 def detect_labels(img):
-    vision_client = vision.Client()
     image = vision_client.image(content=cv2.imencode('.jpg', img)[1].tostring())
     texts = image.detect_text()
 

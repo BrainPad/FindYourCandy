@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Find Your Candy</title>
+<link href="/static/js/manifest.json" rel="manifest">
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300" rel="stylesheet">
+<link href="/static/css/reset.css" rel="stylesheet">
+<link href="/static/css/style.css" rel="stylesheet">
+<link href="/static/css/anim.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="/static/js/learn.js"></script>
+</head>
+<body>
+<div class="loading">
+  <div class="spinner"><i></i><i></i><i></i></div>
+</div>
+<div class="cap">
+  <div class="cap-init">
+    <div class="cap-left"></div>
+    <div class="cap-right">
+      <div>
+        <p>Please put labels and candies<br>
+          on the table, then start.</p>
+        <p><a href="#" class="btn cap-start">START</a></p>
+      </div>
+      <div class="cap-footer"><a href="/predict">SWITCH TO SERVING</a></div>
+    </div>
+  </div>
+  <div class="cap-steps">
+    <div class="cap-left">
+      <div>
+        <dl class="cap-labels">
+        </dl>
+        <dl class="cap-images">
+        </dl>
+      </div>
+    </div>
+    <div class="cap-right">
+      <div>
+        <p>STEP <span class="cap-step">1</span>/4</p>
+        <p><a href="#" class="btn cap-start">START NEXT</a></p>
+        <p><a href="#" class="btn cap-done">DONE</a></p>
+        <p><a href="#" class="btn btn-g cap-retry">RETRY</a></p>
+      </div>
+      <div class="cap-footer"><a href="/learn">CANCEL</a></div>
+    </div>
+  </div>
+</div>
+<div class="train">
+  <dl class="train-images">
+  </dl>
+  <div class="train-v3">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1024 360" >
+      <rect x="862" y="148" class="st0" width="20" height="60" style="stroke:#42A5F5;" />
+      <rect x="902" y="148" class="st1" width="20" height="60" style="stroke:#66BB6A;" />
+      <rect x="943" y="148" class="st2" width="20" height="60" style="stroke:#FFA726;" />
+      <rect x="983" y="148" class="st3" width="20" height="60" style="stroke:#EF5350;" />
+    </svg>
+  </div>
+  <div class="train-txt">
+    <div>LEARNING NOW</div>
+  </div>
+</div>
+<div class="stat">
+  <div class="stat-item">
+    <div class="stat-left">Loss</div>
+    <div class="stat-right">
+      <div class="stat-loss-bg">
+        <div>0.5</div>
+        <div></div>
+      </div>
+      <div class="stat-loss"></div>
+      <div class="stat-loss-txt">
+        <div>Loss:<span class="stat-loss-y">0.000</span></div>
+        <div>Step:<span class="stat-loss-x">0</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-left">Principal<br>
+      component<br>
+      analysis</div>
+    <div class="stat-right">
+      <div class="plot"></div>
+      <dl class="plot-label">
+      </dl>
+    </div>
+  </div>
+  <div class="stat-btn"><a href="/learn" class="btn btn-g">TRY AGAIN</a><a href="/predict" class="btn">TRY SERVING</a></div>
+</div>
+</body>
+</html>

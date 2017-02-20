@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Find Your Candy</title>
+<link href="/static/js/manifest.json" rel="manifest">
 <link href="https://fonts.googleapis.com/css?family=Roboto:100,300" rel="stylesheet">
 <link href="/static/css/reset.css" rel="stylesheet">
 <link href="/static/css/style.css" rel="stylesheet">
@@ -17,6 +18,7 @@
     <div class="speech-mic"><img src="/static/images/ico-mic.svg"></div>
   </div>
   <div class="speech-out"></div>
+  <div class="speech-footer"><a href="/learn">SWITCH TO LEARNING</a></div>
 </div>
 <div class="nl">
   <div class="nl-inner">
@@ -26,8 +28,7 @@
 </div>
 <div class="cam">
   <div class="cam-img">
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" viewBox="0 0 0 0">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 0 0">
       <polygon points="0,0 0,0 0,0 0,0 "/>
     </svg>
   </div>
@@ -37,6 +38,10 @@
 <div class="thanks">
   <div>Do you like my choice of candy?</div>
   <div>Thank you!</div>
+  <div>
+    <p><a href="predict" class="btn">TRY AGAIN</a><br>
+      <a href="learn" class="btn btn-g">TRY LEARNING</a></p>
+  </div>
 </div>
 </body>
 </html>

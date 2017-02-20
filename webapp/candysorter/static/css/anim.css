@@ -42,10 +42,20 @@ transform: scale(0);
 .force { transition: all .3s; }
 .mode-plot-end .force { opacity: 0; transform: scale(0); }
 /* plot */
-.plot dd { transform: scale(0); transition: all .3s; }
+.plot dd { transform: scale(0); transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); ; }
 .mode-plot-start .plot dd { transform: scale(1); }
 .mode-plot-end .plot dd { transform: scale(0); transition-delay: 0s!important; }
 .mode-plot-end .plot dd.nearest { transform: scale(5); opacity: 1; transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.plot dd { animation: plot 1s infinite alternate; }
+@keyframes plot {
+0% {
+opacity: 0.6;
+}
+50%, 100% {
+opacity: 0.8;
+}
+}
+.mode-stat-end .plot dd { opacity: 0.8; animation: none; }
 /* cam */
 .cam { opacity: 0; transform: scale(0.8); transition: all .3s; }
 .mode-cam-start .cam { opacity: 1; transform: scale(1); }
@@ -60,8 +70,79 @@ stroke-dashoffset: 0;
 }
 }
 /* thanks  */
+.thanks { height: 0; }
 .thanks div { opacity: 0; transform: translate(100px, 0); transition: all .3s; }
+.mode-thanks-start .thanks { height: 100%; }
 .mode-thanks-start .cam { opacity: 0; }
-.mode-thanks-start .thanks div:first-child { opacity: 1; transform: translate(0, 0); }
-.mode-thanks-end .thanks div:first-child { opacity: 0; transform: translate(-100px, 0); }
-.mode-thanks-end .thanks div:last-child { opacity: 1; transform: translate(0, 0); }
+.mode-thanks-start .thanks div:nth-child(1) { opacity: 1; transform: translate(0, 0); }
+.mode-thanks-end .thanks div:nth-child(1) { opacity: 0; transform: translate(-100px, 0); }
+.mode-thanks-end .thanks div:nth-child(2) { opacity: 1; transform: translate(0, 0); }
+.mode-thanks-btn .thanks div:nth-child(2) { opacity: 0; transform: translate(-100px, 0); }
+.mode-thanks-btn .thanks div:nth-child(3) { opacity: 1; transform: translate(0, 0); }
+/* loading */
+.loading { height: 0; opacity: 0; transition: opacity .3s; }
+.mode-loading .loading { height: 100%; opacity: 1; }
+.spinner i { animation: spinner 1.4s infinite ease-in-out both; }
+.spinner i:nth-child(1) { animation-delay: -0.32s; }
+.spinner i:nth-child(2) { animation-delay: -0.16s; }
+@keyframes spinner {
+0%, 80%, 100% {
+transform: scale(0);
+}
+40% {
+transform: scale(1.0);
+}
+}
+/* cap */
+.cap { transition-delay: .3s; }
+.cap-init p { opacity: 0; transform: translate(0, 100px); transition: all .3s; }
+.cap-init p:nth-child(2) { transition-delay: .1s; }
+.cap-steps { height: 0; opacity: 0; transition: opacity .3s; }
+.mode-cap-init .cap-init p { opacity: 1; transform: translate(0, 0); }
+.mode-cap-steps .cap-init { display: none; }
+.mode-cap-steps .cap-steps { height: 100%; opacity: 1; }
+.cap-images dd { animation: cap .3s both; }
+.mode-train .cap { height: 0; }
+.mode-train .cap-steps { opacity: 0; }
+@keyframes cap {
+0% {
+opacity: 0;
+transform: translate(0, 100px);
+}
+100% {
+opacity: 1;
+transform: translate(0, 0);
+}
+}
+/* train */
+.train { height: 0; }
+.train-txt { opacity: 0; transform: translate(100px, 0); transition: all .3s; }
+.train-v3 { opacity: 0; transform: translate(-100px, 0); transition: all 1s; }
+.mode-train .train { height: 100%; }
+.mode-train .train-txt { opacity: 1; transform: translate(0, 0); }
+.mode-train-v3 .train-v3 { opacity: 1; transform: translate(0, 0); }
+.mode-train .train-txt { animation: trainTxt 2s infinite alternate; }
+@keyframes trainTxt {
+0% {
+opacity: 0;
+}
+60%, 100% {
+opacity: 1;
+}
+}
+.train-v3 rect { animation: v3 300s linear forwards; }
+@keyframes v3 {
+0% {
+stroke-dashoffset: 30000;
+}
+100% {
+stroke-dashoffset: 0;
+}
+}
+/* status */
+.stat { height: 0; opacity: 0; transform: translate(-100px, 0); transition: opacity 1s, transform 1s; }
+.mode-stat .cap,
+.mode-stat .train { display: none; }
+.mode-stat .stat { height: 100%; opacity: 1; transform: translate(0, 0); }
+.stat-btn { height: 0; opacity: 0; transition: opacity .3s; }
+.mode-stat-end .stat-btn { height: 100%; opacity: 1; }

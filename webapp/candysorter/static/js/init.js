@@ -229,7 +229,6 @@ $(function () {
 	var plot = function () {
 		// 読み込みデータからデータセットを作成
 		var data = sim.similarities.embedded;
-    console.log(data);
 		var dataSet = [];
 		for (var i in data) {
 			var em = 0; // 類似度の高いラベルを抽出
@@ -271,7 +270,8 @@ $(function () {
 				.css({
 					left: dataSet[i].x + "px",
 					top: dataSet[i].y + "px",
-					transitionDelay: parseInt(i) * 0.03 + "s"
+					transitionDelay: parseInt(i) * 0.03 + "s",
+					animationDelay: parseInt(i) * 0.03 + "s"
 				});
 			$(".plot dd:last-child i")
 				.css({
@@ -344,14 +344,18 @@ $(function () {
 		setTimeout(function () {
 			$("body").addClass("mode-thanks-end");
 		}, 3000);
+		setTimeout(function () {
+			$("body").addClass("mode-thanks-btn");
+		}, 5000);
 	};
 
 	// 処理の開始
 	//$.getJSON(simUrl, function (data) {
-	//	sim = data;
-	//	cam();
-	//	orce();
-	//	plot();
-	//});
+	//		sim = data;
+	//		cam();
+	//		force();
+	//		plot();
+	//	});
+	//thanks();
 	speech();
 });

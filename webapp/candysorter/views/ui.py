@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 
 import cv2
-from flask import Blueprint, current_app, send_file
+from flask import Blueprint, current_app, send_file, send_from_directory
 
 from candysorter.config import Config
 from candysorter.decorators import after_this_request
@@ -18,6 +18,16 @@ ui = Blueprint('ui', __name__)
 @ui.route('/predict')
 def predict():
     return current_app.send_static_file('predict.html')
+
+
+@ui.route('/learn')
+def learn():
+    return current_app.send_static_file('learn.html')
+
+
+@ui.route('/image/<path:filename>')
+def image(filename):
+    return send_from_directory(Config.DOWNLOAD_IMAGE_DIR, filename)
 
 
 @ui.route('/_capture')

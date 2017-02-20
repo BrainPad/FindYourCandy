@@ -5,6 +5,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import logging
 import logging.config
 import os
+import sys
 
 from flask import Flask, g, jsonify
 
@@ -26,16 +27,15 @@ def create_app():
 
 
 def _configure_app(app, config):
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../train'))
     app.config.from_object(config)
 
 
 def _configure_blueprints(app):
     from candysorter.views.api import api
-    from candysorter.views.download import download
     from candysorter.views.ui import ui
 
     app.register_blueprint(api)
-    app.register_blueprint(download)
     app.register_blueprint(ui)
 
 
@@ -83,6 +83,11 @@ def _configure_logging(app, config):
             'candysorter': {
                 'level': config.LOG_LEVEL,
                 'handlers': ['file_app'] if not app.debug else ['console_app'],
+                'propagate': False,
+            },
+            'tensorflow': {
+                'level': logging.ERROR,
+                'handlers': ['file_access'] if not app.debug else ['console_access'],
                 'propagate': False,
             },
             'werkzeug': {

@@ -38,7 +38,7 @@ class ImageCapture(object):
             return img
 
         capture.release()
-        raise Exception('Failed to capture.')
+        raise Exception('Failed to capture image.')
 
     def _blur_index(self, img):
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

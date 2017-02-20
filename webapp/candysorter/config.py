@@ -28,18 +28,23 @@ class DefaultConfig(object):
 
     WORD2VEC_MODEL_FILE = os.path.join(
         RESOURCE_DIR, 'models/GoogleNews-vectors-negative300.bin.gz')
-    KERAS_MODEL_FILE = os.path.join(
-        RESOURCE_DIR, 'models/weights_20170208_195656.hdf5')
+    CLASSIFIER_MODEL_DIR = os.path.join(
+        RESOURCE_DIR, 'models/classifier')
+    INCEPTION_MODEL_FILE = os.path.join(
+        RESOURCE_DIR, 'models/classify_image_graph_def.pb')
 
-    CANDY_DETECTOR_HISTGRAM_BAND = (80, 200)
+    CANDY_DETECTOR_HISTGRAM_BAND = (0, 255)
     CANDY_DETECTOR_HISTGRAM_THRES = 2.7e-3
-    CANDY_DETECTOR_BINARIZE_BLOCK = 501
-    CANDY_DETECTOR_MARGIN = (20, 20)
-    CANDY_DETECTOR_OPENING_ITER = 2
-    CANDY_DETECTOR_CLOSING_ITER = 5
-    CANDY_DETECTOR_SURE_FG_THRES = 0.5
+    CANDY_DETECTOR_EDGE3_thres = 250
+    CANDY_DETECTOR_EDGE5_thres = 230
+    CANDY_DETECTOR_MARGIN = (30, 30)
+    CANDY_DETECTOR_CLOSING_ITER = 1
+    CANDY_DETECTOR_OPENING_ITER = 10
+    CANDY_DETECTOR_ERODE_ITER = 25
+    CANDY_DETECTOR_DILATE_ITER = 1
+    CANDY_DETECTOR_BG_SIZE_FILTER = 2000
+    CANDY_DETECTOR_SURE_FG_THRES = 10
     CANDY_DETECTOR_RESTORE_FG_THRES = 0.0
-    CANDY_DETECTOR_DILATE_ITER = 3
 
     IMAGE_CAPTURE_DEVICE = 0
     IMAGE_CAPTURE_WIDTH = 1920
@@ -49,9 +54,16 @@ class DefaultConfig(object):
     IMAGE_CALIBRATOR_AREA = (1625, 1100)
     IMAGE_CALIBRATOR_SCALE = 550
 
+    PICKUP_ENDOPOINT = 'http://localhost:18001/api/pickup'
+
     TRAIN_LABEL_AREA_HEIGHT = 400
 
-    PICKUP_ENDOPOINT = 'http://localhost:8000/api/pickup'
+    CLOUD_ML_BUCKET = 'gs://candy-sorter-ml'
+    CLOUD_ML_PACKAGE_URIS = ['gs://candy-sorter-ml/package/trainer.tar.gz']
+    CLOUD_ML_PYTHON_MODULE = 'trainer.train'
+    CLOUD_ML_TRAIN_DIR = 'gs://candy-sorter-ml/{name}/checkpoints'
+    CLOUD_ML_LOG_DIR = 'gs://candy-sorter-ml/logs/{name}'
+    CLOUD_ML_DATA_DIR = 'gs://candy-sorter-ml/{name}/features'
 
 
 class DevelopmentConfig(DefaultConfig):

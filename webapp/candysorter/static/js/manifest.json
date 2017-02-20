@@ -1,0 +1,11 @@
+{
+	"name": "Find Your Candy",
+	"icons": [{
+		"src": "/static/images/app.png",
+		"sizes": "192x192",
+		"type": "image/png"
+	}],
+	"start_url": "/predict",
+	"display": "fullscreen",
+	"orientation": "landscape"
+}
