@@ -21,7 +21,7 @@ setup
 
 
 ### Step1 : Place hardware components and Marker sheet
-1. Print out this marker sheet in A3 paper and stick it on the center
+1. Print out [the marker sheet](./image/marker_paper.pdf) in A3 paper and stick it on the center
 (This sheet will be used during both setup and demo.)
 2. Build the robot arm by following manuals.
 3. Place the robot arm to attach the A3 paper on A-D side.
