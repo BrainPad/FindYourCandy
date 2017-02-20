@@ -47,7 +47,7 @@ Note: due to unavailability of CDVU-06IP extender unit.
 The following instructions illustrates how to adjust the camera position.
 
 1. Boot up linux box and login the desktop.
-2. Execute 'script/camera_tune.py' that are included in DEMO software. And see the camera view in the window.
+2. Execute [script/camera_tune.py](./script/camera_tune.py) that are included in DEMO software. And see the camera view in the window.
 3. If you cannot see OK sign in the window, tweak the camera or its extension and have whole image of A3 paper.
   - You may also try to get better focus by switching between S and C on the camera.
 4. You may click on left mouse button to exit this software.
@@ -55,7 +55,7 @@ The following instructions illustrates how to adjust the camera position.
 ![](./image/camera_calibration.png)
 
 ### Step4: Robot Arm Caribration
-1. Execute 'script/robot_tune.py' to start tuning the coordinate of arm.
+1. Execute [script/robot_tune.py](./script/robot_tune.py) to start tuning the coordinate of arm.
 2. To avoid damaging the robot arm during this process, hold the arm by your hand first. And then push the release button (which is marked ‘unlock’ ) with the other hand. Please be aware when releasing the robot arm, it may start falling instantly.
 3. You slowly land the arm edge to the center of “Maker A”.
 4. Hit “Enter” key.
