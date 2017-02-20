@@ -1,5 +1,19 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
+# Copyright 2017 BrainPad Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
 import cv2
 import sys
 import time
@@ -34,10 +48,10 @@ def is_OK(image):
   except Exception as e:
     print e
     return False
-  if len(corners)<4: 
+  if len(corners)<4:
     return False
   return True
-  
+
 
 flag = Flag()
 font = cv2.FONT_HERSHEY_PLAIN
@@ -46,7 +60,7 @@ capture.set(3,1920)
 capture.set(4,1080)
 
 
-# Attempt to display using cv2 
+# Attempt to display using cv2
 cv2.namedWindow('Tuning Camera',cv2.WINDOW_KEEPRATIO | cv2.WINDOW_NORMAL)
 cv2.resizeWindow('Tuning Camera', 960, 540)
 cv2.setMouseCallback('Tuning Camera', mouse_event)
@@ -68,4 +82,3 @@ while True :
 
 print "Exit."
 cv2.destroyAllWindows()
-
