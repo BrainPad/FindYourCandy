@@ -51,3 +51,23 @@ $ cd ~/FindYourCandy
 $ sudo pip install -r robot-arm/requirements.txt
 $ sudo pip install -r webapp/requirements.txt
 ```
+
+## Nginx setup
+This is not mandatory, but this setup senario is based on nginx.
+If you don't install, you have to figure out how to setup by yourself.
+```
+$ sudo mv webapp.conf /etc/nginx/conf.d/
+$ sudo mv robot.conf /etc/nginx/conf.d/
+
+$ sudo mkdir /etc/uwsgi
+$ sudo cp webapp.ini /etc/uwsgi/
+  (* You must edit webapp.ini and change the entry of GOOGLE_APPLICATION_CREDENTIALS later, after you create your credentials in following steps.)
+$ sudo cp robot.ini /etc/uwsgi/
+  (* You need to modify robot.ini according to your environment.)
+
+$ sudo mkdir -m 775 /var/run/uwsgi
+$ sudo mkdir -m 775 /var/log/uwsgi
+
+$ sudo cp uwsgi-webapp.service /etc/systemd/system/
+$ sudo cp uwsgi-robot.service /etc/systemd/system/
+```

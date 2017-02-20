@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI service for robot
+After=syslog.target
+
+[Service]
+ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/robot.ini
+Restart=always
+KillSignal=SIGTERM
+StandardError=syslog
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

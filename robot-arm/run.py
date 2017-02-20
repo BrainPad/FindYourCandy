@@ -23,7 +23,7 @@ from dobot.utils import detect_dobot_port, dobot_is_on_port
 DEFAULT_BAUDRATE = 115200
 
 parser = argparse.ArgumentParser(description='Run Dobot WebAPI.')
-parser.add_argument('--port', type=int, default=8000)
+parser.add_argument('--port', type=int, default=18001)
 parser.add_argument('--host', type=str, default='0.0.0.0')
 parser.add_argument('--dobot-port', type=str, default=None)
 parser.add_argument('--tuner-file', type=str, default='/tmp/robot_tuner.dat')

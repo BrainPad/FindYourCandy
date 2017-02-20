@@ -1,0 +1,15 @@
+[Unit]
+Description=uWSGI service for webapp
+After=syslog.target
+
+[Service]
+ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/webapp.ini
+Restart=always
+KillSignal=SIGTERM
+StandardError=syslog
+Type=notify
+NotifyAccess=all
+TimeoutSec=infinity
+
+[Install]
+WantedBy=multi-user.target
