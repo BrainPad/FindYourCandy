@@ -64,7 +64,6 @@ def get_config(env, dobot_port, tuning_file):
     Config = _ENV_TO_CONFIG[env]()
 
     Config.DOBOT_SERIAL_PORT = dobot_port
-    # todo: 微妙
     Config.DOBOT_COORDINATE_CONVERTER = CoordinateConverter.from_tuning_file(tuning_file)
 
     return Config

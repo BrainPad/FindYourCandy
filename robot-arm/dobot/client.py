@@ -36,7 +36,6 @@ class Dobot(object):
         return self.serial.call(command.GetPose())
 
     def wait(self, timeout_sec=120):
-        """dobotが内部queueを消費するまでブロック"""
         logger.debug("waiting for dobot to complete commands")
         start_time = time.time()
         while self.count_queued_command() > 0:
