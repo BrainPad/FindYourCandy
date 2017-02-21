@@ -44,7 +44,7 @@ $ python2 run_api.py  # Be sure python2.7 is selected
 
 - POST /api/pickup
   - Pick up a candy at given coordinates and serve it.
-  - `curl -XPOST -d'{"x":150, "y":150}' --header "Content-Type: application/json" localhost:18001/api/status`
+  - `curl -XPOST -d'{"x":150, "y":150}' --header "Content-Type: application/json" localhost:18001/api/pickup`
 
 - GET /api/status
   - Get angles, coordinates, and the number of queued commands.

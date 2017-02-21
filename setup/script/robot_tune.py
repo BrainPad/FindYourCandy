@@ -18,7 +18,7 @@ import sys
 
 import requests
 
-sys.path.append('/home/brainpad/CandySorter/robot-arm')
+sys.path.append('../../robot-arm')
 from dobot.client import Dobot
 from dobot.utils import detect_dobot_port, dobot_is_on_port
 

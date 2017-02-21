@@ -16,7 +16,7 @@ import cv2
 import sys
 import time
 
-sys.path.append('/home/brainpad/CandySorter/webapp')
+sys.path.append('../../webapp')
 from candysorter.models.images.calibrate import ImageCalibrator
 
 
