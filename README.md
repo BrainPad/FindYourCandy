@@ -10,14 +10,14 @@ The demo starts with listening to your voice request such as "I like a dark chew
 Then the system uses word2vec and regression (Inception-v3 + transfer learning) on Cloud Machine Learning (Cloud ML) for choosing the best candy for your request. The algorithm is smart enough to understand the similarity of meaning between two words - such as "milky and creamy", "hot and spicy" - based on an analysis result on natural languages. With this technology, the system tries to recommend a candy that has the highest likelihood of fulfilling the request.
 
 ## Locating and serving a candy with image recognition on Cloud ML
-Once system determined what type of candy to serve, it runs a deep learning model for image recognition and analyzes the image of candies on the table. The model locates the position of the target candy and serve it to you with the robot arm. 
+Once system determined what type of candy to serve, it runs a deep learning model for image recognition and analyzes the image of candies on the table. The model locates the position of the target candy and serve it to you with the robot arm.
 
 In the training mode, the system uses Inception model with transfer learning on Cloud ML to train the model within a couple of minutes by utilizing the computation power of Google Cloud. So you can bring any objects you like and train the system on-the-fly at high accuracy. It's not designed only for picking up the candies, but for a versatile image recognition for wide variety of applications.
 
 ## Serving mode
 - Android tablet: for UI, recognizes the voice command with Speech and NL API
 - Controller PC (Linux) and camera: recognizes the candies with Cloud ML, controls the robot arm
-- Robot arm: picks the candy
+- Robot arm: picks the candy, takes it to the certain location, and drops.
 
 ## Learning mode
 - Android tablet: shows UI for training process updates
