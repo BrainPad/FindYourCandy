@@ -5,30 +5,22 @@ $(function () {
 	var morUrl = "/api/morphs"; // 形態素解析のPOST先
 	var simUrl = "/api/similarities"; // 類似度のPOST先
 	var pickUrl = "/api/pickup"; // お菓子ピックアップのPOST先
+	var simSec = 30000; // モック用の類似度読み込みdelay（本番環境では0にする）
+	var plotSec = 10000; // 散布図の表示時間（ミリ秒）
+	var camSec = 10000; // カメラ画像の表示時間（ミリ秒）
 
 	// 変数の用意
+	var recognition = new webkitSpeechRecognition();
+	var lang = "en"; // 音声認識言語の保存
 	var speechTxt = "I like chewy chocolate candy"; // 入力文字列の保存
 	var sim = ""; // 推論データの保存
-	var nlFlg = false; // NLの表示進行状況
-	var simFlg = false; // 推論データの取得状況
 	var winW = window.innerWidth;
 	var winH = window.innerHeight;
-
-	// 推論データの監視
-	var simTimer = setInterval(function () {
-		if (nlFlg == true && simFlg == false && sim != "") {
-			simFlg = true;
-			clearInterval(simTimer);
-			force();
-			plot();
-		}
-	}, 100);
 
 	// 音声認識の処理
 	var speech = function () {
 		$("body").addClass("mode-speech-start");
-		var recognition = new webkitSpeechRecognition();
-		recognition.lang = "en";
+		recognition.lang = lang;
 		$(".speech-mic").click(function () {
 			$("body").addClass("mode-speech-in");
 			recognition.start();
@@ -44,6 +36,19 @@ $(function () {
 		};
 	}
 
+	// 音声認識言語の切替
+	$(".speech-lang a").click(function () {
+		if ($(this).text() == "EN") {
+			$(this).text("JP");
+			lang = "ja";
+		} else {
+			$(this).text("EN");
+			lang = "en";
+		}
+		recognition.lang = lang;
+		return false;
+	});
+
 	// NLの処理
 	var nl = function () {
 		$.ajax({
@@ -53,7 +58,8 @@ $(function () {
 			url: morUrl,
 			data: JSON.stringify({
 				"id": pid,
-				"text": speechTxt
+				"text": speechTxt,
+				"lang": lang
 			}),
 			error: function (textStatus) {
 				console.log(textStatus);
@@ -108,16 +114,24 @@ $(function () {
 				});
 				// エフェクトの設定
 				$(".nl-word").each(function (index) {
-					$(this).css("transition-delay", index / 10 + "s");
+					$(this).css("transition-delay", index / 5 + "s");
 				});
 				$(".nl-tag, .nl-pos").each(function (index) {
-					$(this).css("transition-delay", 1 + index / 20 + "s");
+					$(this).css("transition-delay", 1 + index / 10 + "s");
 				});
-				$(".nl-label, .nl-depend dd").css("transition-delay", 2 + "s");
+				$(".nl-label, .nl-depend dd").css("transition-delay", 2.5 + "s");
 				$("body").addClass("mode-nl-loaded");
-				setTimeout(function () {
-					nlFlg = true;
-				}, 3000);
+				// エフェクトの繰り返し
+				setInterval(function () {
+					$("body").addClass("mode-nl-repeat");
+					setTimeout(function () {
+						$("body").removeClass("mode-nl-loaded");
+					}, 400);
+					setTimeout(function () {
+						$("body").addClass("mode-nl-loaded");
+						$("body").removeClass("mode-nl-repeat");
+					}, 500);
+				}, 6000);
 			}
 		});
 		// 推論データの取得
@@ -135,6 +149,10 @@ $(function () {
 			},
 			success: function (data) {
 				sim = data;
+				setTimeout(function () {
+					force();
+					plot();
+				}, simSec);
 			}
 		});
 	};
@@ -270,8 +288,8 @@ $(function () {
 				.css({
 					left: dataSet[i].x + "px",
 					top: dataSet[i].y + "px",
-					transitionDelay: parseInt(i) * 0.03 + "s",
-					animationDelay: parseInt(i) * 0.03 + "s"
+					transitionDelay: parseInt(i) * 0.05 + "s",
+					animationDelay: parseInt(i) * 0.05 + "s"
 				});
 			$(".plot dd:last-child i")
 				.css({
@@ -282,11 +300,11 @@ $(function () {
 		// 時間差で描画
 		setTimeout(function () {
 			$("body").addClass("mode-plot-start");
-		}, 1000);
+		}, 3000);
 		setTimeout(function () {
 			$("body").addClass("mode-plot-end");
 			cam();
-		}, 5000);
+		}, plotSec);
 	};
 
 	// カメラ画像の出力
@@ -319,7 +337,7 @@ $(function () {
 		}, 2000);
 		setTimeout(function () {
 			thanks();
-		}, 9000);
+		}, camSec);
 		// ピックアップの操作
 		$.ajax({
 			type: "POST",
@@ -352,10 +370,8 @@ $(function () {
 	// 処理の開始
 	//$.getJSON(simUrl, function (data) {
 	//		sim = data;
-	//		cam();
 	//		force();
 	//		plot();
 	//	});
-	//thanks();
 	speech();
 });

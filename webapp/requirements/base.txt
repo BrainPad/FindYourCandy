@@ -10,4 +10,5 @@ gensim==0.13.4.1
 scikit-learn==0.18.1
 
 h5py==2.6.0
-https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.11.0rc2-cp27-none-linux_x86_64.whl
+protobuf==3.2.0
+https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.12.1-cp27-none-linux_x86_64.whl

@@ -3,28 +3,29 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import datetime
+from functools import wraps
+import glob
 import logging
 import os
-import re
 import shutil
 import time
 
 import cv2
-from flask import abort, Blueprint, jsonify, request, url_for
-from google.cloud.logging import Client as LogClient
+from flask import abort, Blueprint, g, jsonify, request, url_for
 import numpy as np
 import requests
 from scipy import ndimage
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
-from werkzeug.contrib.cache import SimpleCache
 
+from candysorter.cache import Cache
 from candysorter.config import Config
-from candysorter.ext.google.cloud.ml import Client as MlClient, Job, State, TrainingInput
+from candysorter.ext.google.cloud.ml import State
 from candysorter.models.images.calibrate import ImageCalibrator
 from candysorter.models.images.classify import CandyClassifier
 from candysorter.models.images.detect import CandyDetector, detect_labels
-from candysorter.utils import load_class
+from candysorter.models.images.train import CandyTrainer
+from candysorter.utils import load_class, symlink_force
 
 logger = logging.getLogger(__name__)
 
@@ -33,13 +34,11 @@ api = Blueprint('api', __name__, url_prefix='/api')
 text_analyzer = None
 candy_detector = None
 candy_classifier = None
+candy_trainer = None
 image_capture = None
 image_calibrator = None
 
-ml_client = MlClient()
-log_client = LogClient()
-
-cache = SimpleCache(default_timeout=600)
+cache = Cache()
 
 
 @api.record
@@ -54,6 +53,9 @@ def record(state):
     global candy_classifier
     candy_classifier = CandyClassifier.from_config(Config)
     candy_classifier.init()
+
+    global candy_trainer
+    candy_trainer = CandyTrainer.from_config(Config)
 
     global image_capture
     image_capture = load_class(Config.CLASS_IMAGE_CAPTURE).from_config(Config)
@@ -73,18 +75,28 @@ def handle_exception(e):
     return jsonify(error=500, message='internal server error'), 500
 
 
-def _cache_key(id_, key):
-    return '{}:{}'.format(id_, key)
+def id_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if request.method == 'POST':
+            id_ = request.json.get('id')
+        else:
+            id_ = request.args.get('id')
+        if not id_:
+            abort(400)
+        g.id = id_
+        return f(*args, **kwargs)
+    return wrapper
 
 
 @api.route('/morphs', methods=['POST'])
+@id_required
 def morphs():
-    id_ = request.json.get('id')
-    if not id_:
-        abort(400)
     text = request.json.get('text')
     if not text:
         abort(400)
+
+    logger.info('=== Analyze text: id=%s ===', g.id)
 
     tokens = text_analyzer.analyze_syntax(text)
     return jsonify(morphs=[
@@ -99,17 +111,16 @@ def morphs():
 
 
 @api.route('/similarities', methods=['POST'])
+@id_required
 def similarities():
-    id_ = request.json.get('id')
-    if not id_:
-        abort(400)
     text = request.json.get('text')
     if not text:
         abort(400)
 
-    # Issue ID
-    predict_id = _job_id(id_)
-    logger.info('Calculate similarities start: id=%s', predict_id)
+    logger.info('=== Calculate similarities: id=%s ===', g.id)
+
+    # Session
+    session_id = _session_id()
 
     # Analyze text
     logger.info('Analyaing text.')
@@ -131,7 +142,7 @@ def similarities():
     logger.info('  %d candies detected.', len(candies))
 
     # Create image directory
-    save_dir = _create_save_dir(predict_id)
+    save_dir = _create_save_dir(session_id)
 
     # Save snapshot image
     logger.info('Saving snapshot image.')
@@ -159,11 +170,11 @@ def similarities():
     nearest_idx = np.argmax([speech_sim.dot(s) for s in candy_sims])
     logger.info('  Nearest candy: idx=%d, url=%s', nearest_idx, candy_urls[nearest_idx])
 
-    # Save target centroid
-    logger.info('Saving target point.')
+    # Save pickup point
+    logger.info('Saving pickup point.')
     nearest_centroid = candies[nearest_idx].box_centroid
-    target_point = image_calibrator.get_coordinate(nearest_centroid[0], nearest_centroid[1])
-    cache.set(_cache_key(id_, 'target'), target_point)
+    pickup_point = image_calibrator.get_coordinate(nearest_centroid[0], nearest_centroid[1])
+    cache.set('pickup_point', pickup_point)
 
     # For json
     def _sim_as_json(sim):
@@ -193,90 +204,49 @@ def similarities():
     ))
 
 
-def _job_id(id_):
-    # e.g. reqid -> 20170209_130952_reqid
-    return '{}_{}'.format(datetime.now().strftime('%Y%m%d_%H%M%S'), id_)
-
-
-def _capture_image(retry_count=5, retry_interval=0.1):
-    for i in range(retry_count):
-        try:
-            img = image_capture.capture()
-            img = image_calibrator.calibrate(img)
-            return img
-        except Exception:
-            logger.warning('  Retrying: %d times.', (i + 1))
-            time.sleep(retry_interval)
-    raise Exception('Failed to capture image.')
-
-
-def _create_save_dir(job_id):
-    # e.g. 20170209_130952_reqid -> /tmp/download/image/20170209_130952_reqid/
-    d = os.path.join(Config.DOWNLOAD_IMAGE_DIR, job_id)
-    os.makedirs(d)
-    return d
-
-
-def _candy_file(save_dir, i):
-    # e.g. /tmp/download/image/20170209_130952_reqid/candy_001.png
-    return os.path.join(save_dir, 'candy_{:02d}.jpg'.format(i))
-
-
-def _image_url(image_file):
-    # e.g. 20170209_130952_reqid/candy_001.png
-    rel = os.path.relpath(image_file, Config.DOWNLOAD_IMAGE_DIR)
-
-    # e.g. /image/20170209_130952_reqid/candy_001.png
-    return url_for('ui.image', filename=rel)
-
-
-def _reduce_dimension(speech_sim, candy_sims):
-    l = [speech_sim]
-    l.extend(candy_sims)
-    pca = PCA(n_components=2)
-    rl = pca.fit_transform(l)
-    mms = MinMaxScaler(feature_range=(0.3, 0.7))
-    rl = mms.fit_transform(rl)
-    return rl[0], rl[1:]
-
-
 @api.route('/pickup', methods=['POST'])
+@id_required
 def pickup():
-    id_ = request.json.get('id')
-    if not id_:
-        abort(400)
-    target_point = cache.get(_cache_key(id_, 'target'))
-    if not target_point:
+    pickup_point = cache.get('pickup_point')
+    if not pickup_point:
         abort(400)
 
-    logger.info('Picking candy. x=%f, y=%f', target_point[0], target_point[1])
-    requests.post(Config.PICKUP_ENDOPOINT, json={'x': target_point[0], 'y': target_point[1]})
+    logger.info('=== Pickup candy: id=%s ===', g.id)
+
+    logger.info('Picking candy. x=%f, y=%f', pickup_point[0], pickup_point[1])
+    requests.post(Config.PICKUP_ENDOPOINT, json=dict(x=pickup_point[0], y=pickup_point[1]))
     return jsonify()
 
 
 @api.route('/capture', methods=['POST'])
+@id_required
 def capture():
-    id_ = request.json.get('id')
-    if not id_:
-        abort(400)
     step = request.json.get('step')
-    if not step:
+    if not step or not (1 <= step <= 4):
         abort(400)
-    step = int(step)
 
-    logger.info('Capture step %d', step)
+    # Session
+    if step == 1:
+        session_id = _session_id()
+        cache.set('session_id', session_id)
 
-    key_train_id = _cache_key(id_, 'train_id')
-    train_id = cache.get(key_train_id)
-    if not train_id:
-        train_id = _job_id(id_)
-        cache.set(key_train_id, train_id)
+        save_dir_root = _create_save_dir(session_id)
+        cache.set('save_dir', save_dir_root)
 
-    key_save_dir = _cache_key(id_, 'train_save_dir')
-    save_dir_root = cache.get(key_save_dir)
-    if not save_dir_root:
-        save_dir_root = _create_save_dir(train_id)
-        cache.set(key_save_dir, save_dir_root)
+        labels_list = [None] * 4
+        cache.set('labels_list', labels_list)
+    else:
+        session_id = cache.get('session_id')
+        if not session_id:
+            abort(400)
+        save_dir_root = cache.get('save_dir')
+        if not save_dir_root:
+            abort(400)
+        labels_list = cache.get('labels_list')
+        if not labels_list:
+            abort(400)
+
+    logger.info('=== Capture step %d: id=%s, session=%s ===', step, g.id, session_id)
 
     # Create image directory
     save_dir = os.path.join(save_dir_root, 'train{:02d}'.format(step))
@@ -307,13 +277,9 @@ def capture():
     labels = detect_labels(img_label)
     logger.info('  Detected labels: %s', labels)
 
-    # Cache label
-    key_labels = _cache_key(id_, 'labels')
-    cache_labels = cache.get(key_labels)
-    if not cache_labels:
-        cache_labels = [None] * 4
-    cache_labels[step - 1] = labels
-    cache.set(key_labels, cache_labels)
+    # Save label
+    labels_list[step - 1] = labels
+    cache.set('labels_list', labels_list)
 
     # Detect candies
     logger.info('Detecting candies.')
@@ -331,30 +297,38 @@ def capture():
 
 
 @api.route('/train', methods=['POST'])
+@id_required
 def train():
-    id_ = request.json.get('id')
-    if not id_:
+    session_id = cache.get('session_id')
+    if not session_id:
         abort(400)
-    train_id = cache.get(_cache_key(id_, 'train_id'))
-    if not train_id:
+    labels_list = cache.get('labels_list')
+    if not labels_list:
+        abort(400)
+    save_dir_root = cache.get('save_dir')
+    if not save_dir_root:
         abort(400)
 
-    job_name = _job_name(train_id)
+    logger.info('=== Start training: id=%s, session=%s ===', g.id, session_id)
 
-    # TODO: Vectorize
-    # TODO: Upload to gcs
+    job_id = _job_id(session_id)
 
-    job = Job(name=job_name, client=ml_client)
-    job.training_input = TrainingInput(
-        package_uris=Config.CLOUD_ML_PACKAGE_URIS,
-        python_module=Config.CLOUD_ML_PYTHON_MODULE
-    )
-    job.training_input.with_args(
-        '--train_dir={}'.format(Config.CLOUD_ML_TRAIN_DIR.format(name=job_name)),
-        '--log_dir={}'.format(Config.CLOUD_ML_LOG_DIR.format(name=job_name)),
-        '--data_dir={}'.format(Config.CLOUD_ML_DATA_DIR.format(name=job_name)),
-    )
-    job.create()
+    logger.info('Creating labels file: job_id=%s', job_id)
+    labels = [' '.join(l) for l in labels_list]
+    candy_trainer.create_labels_file(job_id, labels)
+
+    logger.info('Creating features file: job_id=%s', job_id)
+    files_list = []
+    urls_list = []
+    for i in range(4):
+        path = os.path.join(save_dir_root, 'train{:02d}'.format(i + 1), 'candy_*.jpg')
+        files = glob.glob(path)
+        files_list.append(files)
+        urls_list.append([_image_url(f) for f in files])
+    candy_trainer.create_features_file(job_id, files_list, urls_list)
+
+    logger.info('Starting training: job_id=%s', job_id)
+    candy_trainer.start_training(job_id)
 
     return jsonify({})
 
@@ -371,35 +345,93 @@ CLOUD_ML_STATE_TO_API_STATE = {
 }
 
 
-@api.route('/status')
+@api.route('/status', methods=['POST'])
+@id_required
 def status():
-    id_ = request.args.get('id')
-    if not id_:
-        abort(400)
-    train_id = cache.get(_cache_key(id_, 'train_id'))
-    if not train_id:
+    session_id = cache.get('session_id')
+    if not session_id:
         abort(400)
 
-    job_name = _job_name(train_id)
-    job = ml_client.get_job(job_name)
+    logger.info('=== Training status: id=%s, session=%s ===', g.id, session_id)
 
-    # TODO: get embedded
+    job_id = _job_id(session_id)
+    _status, losses, embedded = candy_trainer.status(job_id)
+    logger.info('  training status: %s', _status)
 
-    return jsonify(loss=_get_losses(job_name),
-                   embedded=[],
-                   status=CLOUD_ML_STATE_TO_API_STATE[job.state])
+    status = CLOUD_ML_STATE_TO_API_STATE[_status]
+    if status == 'failed':
+        logger.error('Failed to train: job_id=%s', job_id)
+    if status == 'complete':
+        key = 'model_updated_{}'.format(job_id)
+        if not cache.get(key):
+            logger.info('Training completed, updating model: job_id=%s', job_id)
+            new_checkpoint_dir = candy_trainer.download_checkpoints(job_id)
+            symlink_force(new_checkpoint_dir, Config.CLASSIFIER_MODEL_DIR)
+            text_analyzer.reload()
+            candy_classifier.reload()
+            cache.set(key, True)
+
+    return jsonify(status=status, loss=losses, embedded=embedded)
 
 
-def _job_name(train_id):
-    return 'candy_sorter_{}'.format(train_id)
+@api.route('/_labels')
+def labels():
+    return jsonify(labels=text_analyzer.labels)
 
 
-def _get_losses(job_name):
-    filter_ = 'resource.type:ml_job AND resource.labels.job_id:{}'.format(job_name)
-    messages = [e.payload['message'] if isinstance(e.payload, dict) else e.payload
-                for e in log_client.list_entries(filter_=filter_)]
+@api.route('/_reload', methods=['POST'])
+def reload():
+    text_analyzer.reload()
+    candy_classifier.reload()
+    return jsonify({})
 
-    # FIXME: Umm...
-    r = re.compile('^[0-9]+th epoch end with loss ([0-9.]+)\.$')
-    groups = [r.match(m) for m in messages]
-    return [float(g.group(1)) for g in groups if g]
+
+def _session_id():
+    # e.g. 20170209_130952_reqid
+    return '{}_{}'.format(datetime.now().strftime('%Y%m%d_%H%M%S'), g.id)
+
+
+def _capture_image(retry_count=5, retry_interval=0.1):
+    for i in range(retry_count):
+        try:
+            img = image_capture.capture()
+            img = image_calibrator.calibrate(img)
+            return img
+        except Exception:
+            logger.warning('  Retrying: %d times.', (i + 1))
+            time.sleep(retry_interval)
+    raise Exception('Failed to capture image.')
+
+
+def _create_save_dir(session_id):
+    # e.g. 20170209_130952_reqid -> /tmp/download/image/20170209_130952_reqid/
+    d = os.path.join(Config.DOWNLOAD_IMAGE_DIR, session_id)
+    os.makedirs(d)
+    return d
+
+
+def _candy_file(save_dir, i):
+    # e.g. /tmp/download/image/20170209_130952_reqid/candy_001.png
+    return os.path.join(save_dir, 'candy_{:02d}.jpg'.format(i))
+
+
+def _image_url(image_file):
+    # e.g. 20170209_130952_reqid/candy_001.png
+    rel = os.path.relpath(image_file, Config.DOWNLOAD_IMAGE_DIR)
+
+    # e.g. /image/20170209_130952_reqid/candy_001.png
+    return url_for('ui.image', filename=rel)
+
+
+def _reduce_dimension(speech_sim, candy_sims):
+    l = [speech_sim]
+    l.extend(candy_sims)
+    pca = PCA(n_components=2)
+    rl = pca.fit_transform(l)
+    mms = MinMaxScaler(feature_range=(0.3, 0.7))
+    rl = mms.fit_transform(rl)
+    return rl[0], rl[1:]
+
+
+def _job_id(session_id):
+    return 'candy_sorter_{}'.format(session_id)

@@ -75,33 +75,6 @@ class FeatureExtractor(object):
         return features
 
 
-class ImagePathBuilder(object):
-    """
-    ImagePathBuilder builds path to the image from image_dir and image label
-    image_dir should be organized as follows:
-
-    image_dir
-    ├── label_01
-    │   ├── image_01.jpg
-    │   └── image_02.jpg
-    └── label_02
-        ├── image_01.jpg
-        └── image_02.jpg
-    """
-
-    def __init__(self, image_dir, extension='jpg'):
-        self.image_dir = image_dir
-        self.extension = extension
-
-    def get_labels(self):
-        return sorted([sub_dir for sub_dir in tf.gfile.ListDirectory(self.image_dir)
-                       if tf.gfile.IsDirectory('/'.join((self.image_dir, sub_dir)))])
-
-    def get_uris_by_label(self, label):
-        dir_path = os.path.join(self.image_dir, label)
-        return tf.gfile.Glob('{}/*.{}'.format(dir_path, self.extension))
-
-
 class ImagePathGeneratorForTraining(object):
     def __init__(self, image_dir, extension='jpg'):
         self.image_dir = image_dir

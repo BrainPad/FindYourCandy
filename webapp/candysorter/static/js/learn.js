@@ -133,12 +133,13 @@ $(function () {
 				statTest += 1;
 			}
 			$.ajax({
-				type: "GET",
+				type: "POST",
 				contentType: "application/json",
+				dataType: "json",
 				url: statUrl,
-				data: {
+				data: JSON.stringify({
 					"id": pid
-				},
+				}),
 				error: function (textStatus) {
 					console.log(textStatus);
 				},

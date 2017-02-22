@@ -8,7 +8,7 @@ import os
 import tensorflow as tf
 
 from trainer.feature_extractor import FeatureExtractor
-from trainer.model import TransferModel, ModelParams
+from trainer.model import ModelParams, TransferModel
 
 logger = logging.getLogger(__name__)
 
@@ -31,20 +31,28 @@ class CandyClassifier(object):
         )
 
     def init(self):
-        logger.info('Loading inception-v3 model...')
-        self.inception_model = FeatureExtractor(self.inception_model_file)
-        logger.info('Finished loading inception model...')
+        self._load_inception_model()
+        self._load_transfer_model()
 
+    def reload(self):
+        tf.reset_default_graph()
+        self._load_transfer_model()
+
+    def _load_inception_model(self):
+        logger.info('Loading inception model...')
+        self.inception_model = FeatureExtractor(self.inception_model_file)
+        logger.info('Finished loading inception model.')
+
+    def _load_transfer_model(self):
         logger.info('Loading transfer model...')
         with tf.gfile.FastGFile(self.params_file, 'r') as f:
             params = ModelParams.from_json(f.read())
         self.model = TransferModel.from_model_params(params)
-        logger.info('Finished loading transfer model...')
+        logger.info('Finished loading transfer model.')
 
     def classify(self, img_bgr):
         features = self.inception_model.get_feature_vector(img_bgr)
         ckpt = tf.train.get_checkpoint_state(self.checkpoint_dir)
-
         if ckpt is None:
             raise IOError('Checkpoints not found.')
         checkpoint_path = ckpt.model_checkpoint_path
