@@ -100,18 +100,24 @@ class AdjustForPictureToRobot(object):
         if -1 <= x <= 1 and -1.5 <= y <= 1.5:
             pass
         else:
-            message = "Error: xy coordinate is out of range in sheet."
+            message = "Error: x=%s y=%s coordinate is out of range in sheet." % (x, y)
             raise Exception(message)
 
         x_round = round(x, 1)
         y_round = round(y, 1)
 
+        if x_round == -0.0:
+            x_round = 0.0
+
+        if y_round == -0.0:
+            y_round = 0.0
+
         key = '%s,%s' % (x_round, y_round)
 
-        if self.adjust_data[key]:
-            pass
-        else:
-            message = "Error: xy coordinate is out of range in robot arm."
+        try:
+            self.adjust_data[key]
+        except:
+            message = "Error: x=%s y=%s coordinate is out of range in robot arm." % (x_round, y_round)
             raise Exception(message)
 
         x_diff = self.adjust_data[key]['x_picture_diff']
