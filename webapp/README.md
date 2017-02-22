@@ -55,8 +55,8 @@ This software is design to work with Python2.7 under following condtion.
 ## Run app
 In this setup senario, this command is not used. We use nginx+uWSGI instead.
 ```
-# Run app
-$ python2 run.py  # Be sure python2.7 is selected
+# Run app. This requres environment variables.
+$ python2 run.py  # Be sure to use python2.7
 ```
 
 ## UI
@@ -75,6 +75,6 @@ $ curl -i -H "Content-type: application/json" -X POST http://localhost:18000/api
 Similarities
 
 ```sh
-$ curl -i -H "Content-type: application/json" -X POST http://localhost:5000/api/similarities \
+$ curl -i -H "Content-type: application/json" -X POST http://localhost:18000/api/similarities \
     -d '{"text": "I like chewy chocolate candy", "id": "testid"}'
 ```
