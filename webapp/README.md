@@ -27,9 +27,19 @@ This software is design to work with Python2.7 under following condtion.
     ```
 
 - word2vec
-  - download word2vec model from https://github.com/mmihaltz/word2vec-GoogleNews-vectors to the 'models' directory
+  - download word2vec model from https://github.com/mmihaltz/word2vec-GoogleNews-vectors
+  - copy it to the 'models' directory
   ```
   $ mkdir -p ~/FindYourCandy/webapp/candysorter/resources/models
+  ```
+
+- inception-V3
+  - download inception-v3 model from http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz
+  - copy it to the 'models' directory
+  ```
+  $ mkdir -p ~/FindYourCandy/webapp/candysorter/resources/models
+  $ cd ~/FindYourCandy/webapp/candysorter/resources/models
+  $ tar xvzf inception-2015-12-05.tgz classify_image_graph_def.pb
   ```
 
 - Configuration files
@@ -42,7 +52,7 @@ This software is design to work with Python2.7 under following condtion.
 - Network
   - TCP port 18000 need to be exposed to browser.
 
-## Run
+## Run app
 In this setup senario, this command is not used. We use nginx+uWSGI instead.
 ```
 # Run app
