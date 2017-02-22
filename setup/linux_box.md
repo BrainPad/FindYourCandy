@@ -45,6 +45,11 @@ $ sudo chmod 777 /dev/ttyUSB0
   (* You may have the robot at /dev/ttyUSB1 instead of /dev/ttyUSB0, depending on your hardware. ;-)
 $ sudo chmod 777 /dev/video0
   (* If you have two or more web cameras, it may be /dev/video1 or else. )
+```
+Note: After you re-plugin usb or reboot the system, you need to repeat the above steps.
+
+## Install app
+```
 $ cd ~
 $ git clone git@github.com:BrainPad/FindYourCandy.git
 $ cd ~/FindYourCandy
