@@ -3,6 +3,7 @@ Description=uWSGI service for robot
 After=syslog.target
 
 [Service]
+ExecStartPre=/bin/mkdir -m 775 /var/run/uwsgi
 ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/robot.ini
 Restart=always
 KillSignal=SIGTERM

@@ -3,6 +3,7 @@ Description=uWSGI service for webapp
 After=syslog.target
 
 [Service]
+ExecStartPre=/bin/mkdir -m 775 /var/run/uwsgi
 ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/webapp.ini
 Restart=always
 KillSignal=SIGTERM
