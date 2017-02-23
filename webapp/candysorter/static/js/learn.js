@@ -1,23 +1,23 @@
 $(function () {
 
-	// APIの設定
-	var pid = Math.floor(Math.random() * 10000000000000000); // ポストするID
-	var capUrl = "/api/capture"; // 撮影のPOST先
-	var trainUrl = "/api/train"; // 学習スタートのPOST先
-	var statUrl = "/api/status"; // 進捗確認のPOST先
-	var statFirst = 15000; // 初回学習ステータス読み込みの待ち時間（ミリ秒）
-	var statInterval = 10000; // 学習ステータスの読み込み間隔（ミリ秒）
-	var lossMax = 1800; // Loss値の想定回数
-	var statTest = 0; // POSTテスト用の変数（モック：1、本番環境：0）
-	var loadSec = 2000; // ローディング画面テスト用のタイムラグ（本番環境では0に戻す）
+	// API settings
+	var pid = Math.floor(Math.random() * 10000000000000000); // POST ID
+	var capUrl = "/api/capture"; // API for caputure
+	var trainUrl = "/api/train"; // API for learning
+	var statUrl = "/api/status"; // API for status check
+	var statFirst = 15000; // wait time to read initial learning status (ms)
+	var statInterval = 10000; // reading interval of Learning status (ms)
+	var lossMax = 1800; // estimated number of loss value
+	var statTest = 0; // dummy variable for test（dev：1、prd：0）
+	var loadSec = 2000; //　Time lag for loading screen test (return to 0 in prd environment)
 
-	// 変数の用意
-	var stepFlg = 0; // 撮影ステップ
-	var capDat = []; // 撮影データの保存
+	// variables
+	var stepFlg = 0; // capture step
+	var capDat = []; // save capture data
 	var winW = window.innerWidth;
 	var winH = window.innerHeight;
 
-	// 撮影モードの処理
+	// processing capture mode
 	var cap = function () {
 		$("body").addClass("mode-cap-init");
 	};
@@ -39,7 +39,7 @@ $(function () {
 				console.log(textStatus);
 			},
 			success: function (data) {
-				// デバッグ用に時間差で実行
+				// difference time for debug
 				setTimeout(function () {
 					$("body").addClass("mode-cap-steps");
 					$(".cap-labels").html("");
@@ -67,10 +67,10 @@ $(function () {
 		return false;
 	});
 
-	// 学習スタートの処理
+	// start learning
 	var train = function () {
 		$("body").addClass("mode-train");
-		// APIに学習スタートリクエスト
+		// start request
 		$.ajax({
 			type: "POST",
 			contentType: "application/json",
@@ -83,10 +83,10 @@ $(function () {
 				console.log(textStatus);
 			},
 			success: function (data) {
-				// ここに処理
+				// processing
 			}
 		});
-		// パッケージ画像の描画
+		// draw package images
 		for (var i = 0; i < capDat.length; i++) {
 			$(".train-images").append("<dd style='background-image:url(" + capDat[i] + ")'></dd>");
 			$(".train-images dd:last-child").css({
@@ -95,7 +95,7 @@ $(function () {
 				transitionDelay: i / 10 + "s"
 			});
 		}
-		// 処理待ちエフェクト
+		// Pending processing effect
 		var waiting = capDat.length * 100 + 2000;
 		setTimeout(function () {
 			$(".train-images dd").each(function () {
@@ -110,22 +110,22 @@ $(function () {
 		setTimeout(function () {
 			$("body").addClass("mode-train-v3");
 		}, waiting);
-		// 時間をおいて、学習ステータスを実行
-		setTimeout(stat, statFirst);
+		stat();
 	};
 	$(".cap-done").click(function () {
 		train();
 		return false;
 	});
 
-	// 学習ステータスのPOST処理
-	var compFlg = false; // 学習の完了状況
+	// POST processing
+	var runFlg = false; // status
+	var compFlg = false; // status
 	var statTimer = setInterval(function () {}, 100);
 	var statPost = function () {
 		if (compFlg) {
 			clearInterval(statTimer);
 		} else {
-			// テスト用にPOSTURLを加工
+			// for test
 			if (statTest > 0) {
 				if (statTest > 1) {
 					statUrl = "/api/status-test" + statTest + ".json" + "?_=" + pid;
@@ -144,8 +144,25 @@ $(function () {
 					console.log(textStatus);
 				},
 				success: function (data) {
-					if (data.status == "complete") {
-						compFlg = true;
+					if (data.status == "preparing") {
+						return;
+					}
+					if (data.status == "canceled") {
+						// TODO
+						return;
+					}
+					if (data.status == "failed") {
+						// TODO
+						return;
+					}
+					if (data.status == "running" || data.status == "complete") {
+						if (!runFlg) {
+							$("body").addClass("mode-stat");
+							runFlg = true;
+						}
+						if (data.status == "complete") {
+							compFlg = true;
+						}
 					}
 					lossDat = data.loss;
 					statLoss();
@@ -155,12 +172,11 @@ $(function () {
 		}
 	}
 	var stat = function () {
-		$("body").addClass("mode-stat");
 		statPost();
 		statTimer = setInterval(statPost, statInterval);
 	};
 
-	// Lossの描画処理
+	// draw process of Loss
 	var lossDat = [];
 	var lossStep = 0;
 	var lossW = winW - 200;
@@ -172,7 +188,7 @@ $(function () {
 	var statLoss = function () {
 		$(".stat-loss").width(lossW);
 		if (compFlg) {
-			lossInterval = 10; // 最後は10ms間隔
+			lossInterval = 10; // The last is 10 ms interval
 		} else {
 			lossInterval = Math.ceil(statInterval / (lossDat.length - lossStep));
 		}
@@ -196,9 +212,8 @@ $(function () {
 		}, lossInterval);
 	};
 
-	// 散布図の描画
+	// draw scatter plot
 	var plot = function (data) {
-		// 散布図の描画
 		$("body").removeClass("mode-plot-start");
 		$(".plot, .plot-label").html("");
 		var label = [];
@@ -215,26 +230,16 @@ $(function () {
 				.css({
 					backgroundImage: "url(" + data[i].url + ")"
 				});
-			label[data[i].property.lid] = data[i].property.label; // ラベル用の配列を生成
+			label[data[i].property.lid] = data[i].property.label; // generate label array
 		}
 		for (var i in label) {
 			$(".plot-label").append("<dd class=label-" + i + ">" + label[i] + "</dd>");
 		}
-		// 時間差で描画
+		// draw with different time
 		setTimeout(function () {
 			$("body").addClass("mode-plot-start");
 		}, 100);
 	};
-
-	// 処理の開始
-	//$.getJSON(capUrl, function (data) {
-	//		$("body").addClass("mode-train");
-	//		for (var i in data.uris) {
-	//			capDat.push(data.uris[i]);
-	//		}
-	//		train();
-	//	});
-	//stat();
 	cap();
 
 });
