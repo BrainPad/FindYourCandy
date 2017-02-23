@@ -110,7 +110,7 @@ $(function () {
 		setTimeout(function () {
 			$("body").addClass("mode-train-v3");
 		}, waiting);
-		setTimeout(stat, statFirst);
+		stat();
 	};
 	$(".cap-done").click(function () {
 		train();
@@ -118,6 +118,7 @@ $(function () {
 	});
 
 	// POST processing
+	var runFlg = false; // status
 	var compFlg = false; // status
 	var statTimer = setInterval(function () {}, 100);
 	var statPost = function () {
@@ -143,8 +144,25 @@ $(function () {
 					console.log(textStatus);
 				},
 				success: function (data) {
-					if (data.status == "complete") {
-						compFlg = true;
+					if (data.status == "preparing") {
+						return;
+					}
+					if (data.status == "canceled") {
+						// TODO
+						return;
+					}
+					if (data.status == "failed") {
+						// TODO
+						return;
+					}
+					if (data.status == "running" || data.status == "complete") {
+						if (!runFlg) {
+							$("body").addClass("mode-stat");
+							runFlg = true;
+						}
+						if (data.status == "complete") {
+							compFlg = true;
+						}
 					}
 					lossDat = data.loss;
 					statLoss();
@@ -154,7 +172,6 @@ $(function () {
 		}
 	}
 	var stat = function () {
-		$("body").addClass("mode-stat");
 		statPost();
 		statTimer = setInterval(statPost, statInterval);
 	};

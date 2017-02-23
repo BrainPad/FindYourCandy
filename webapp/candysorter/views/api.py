@@ -30,6 +30,7 @@ from candysorter.utils import load_class, symlink_force
 logger = logging.getLogger(__name__)
 
 api = Blueprint('api', __name__, url_prefix='/api')
+cache = Cache()
 
 text_analyzer = None
 candy_detector = None
@@ -37,8 +38,6 @@ candy_classifier = None
 candy_trainer = None
 image_capture = None
 image_calibrator = None
-
-cache = Cache()
 
 
 @api.record
@@ -334,13 +333,13 @@ def train():
 
 
 CLOUD_ML_STATE_TO_API_STATE = {
-    State.STATE_UNSPECIFIED: 'running',
-    State.QUEUED: 'running',
-    State.PREPARING: 'running',
+    State.STATE_UNSPECIFIED: 'preparing',
+    State.QUEUED: 'preparing',
+    State.PREPARING: 'preparing',
     State.RUNNING: 'running',
     State.SUCCEEDED: 'complete',
     State.FAILED: 'failed',
-    State.CANCELLING: 'running',
+    State.CANCELLING: 'canceled',
     State.CANCELLED: 'canceled',
 }
 
@@ -356,7 +355,7 @@ def status():
 
     job_id = _job_id(session_id)
     _status, losses, embedded = candy_trainer.status(job_id)
-    logger.info('  training status: %s', _status)
+    logger.info('Training status: %s', _status)
 
     status = CLOUD_ML_STATE_TO_API_STATE[_status]
     if status == 'failed':
