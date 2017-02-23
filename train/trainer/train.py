@@ -156,7 +156,7 @@ class Trainer(object):
                             probs_with_uri.append(item)
 
                         data['probs'] = probs_with_uri
-                        f.write(json.dumps(data)+'\n')
+                        f.write(json.dumps(data))
 
             self.model.saver.save(sess, checkpoint_path, global_step=self.model.global_step)
             summary_writer.close()
