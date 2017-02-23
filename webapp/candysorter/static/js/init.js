@@ -5,7 +5,7 @@ $(function () {
 	var morUrl = "/api/morphs"; // 形態素解析のPOST先
 	var simUrl = "/api/similarities"; // 類似度のPOST先
 	var pickUrl = "/api/pickup"; // お菓子ピックアップのPOST先
-	var simSec = 30000; // モック用の類似度読み込みdelay（本番環境では0にする）
+	var simSec = 0; // モック用の類似度読み込みdelay（本番環境では0にする）
 	var plotSec = 10000; // 散布図の表示時間（ミリ秒）
 	var camSec = 10000; // カメラ画像の表示時間（ミリ秒）
 
