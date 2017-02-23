@@ -5,7 +5,7 @@ $(function () {
 	var morUrl = "/api/morphs"; // API for Morphological analysis
 	var simUrl = "/api/similarities"; // API for Similarity analysis
 	var pickUrl = "/api/pickup"; // API for pick up candy
-	var simSec = 30000; // delay time
+	var simSec = 10000; // delay time
 	var plotSec = 10000; // display time of scatter plot(milisec）
 	var camSec = 10000; // display tiem of camera image(milisec)
 

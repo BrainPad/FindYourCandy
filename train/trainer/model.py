@@ -3,7 +3,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
-import os
 
 import tensorflow as tf
 from tensorflow.python.ops import init_ops
@@ -58,8 +57,11 @@ class TransferModel(object):
                 trainable=True
             )
 
+            self.keep_prob = tf.placeholder(tf.float32)
+            hidden_drop = tf.nn.dropout(hidden, self.keep_prob)
+
             logits = tf.contrib.layers.fully_connected(
-                hidden,
+                hidden_drop,
                 num_classes,
                 weights_initializer=tf.contrib.layers.xavier_initializer(),
                 biases_initializer=ones_initializer,
@@ -80,9 +82,7 @@ class TransferModel(object):
             # add train operation and summary operation if initializing for training
             # Optimizer
             with tf.variable_scope('optimizer'):
-                optimizer = tf.train.AdamOptimizer()
                 self.global_step = tf.Variable(0, name='global_step', trainable=False)
-                self.train_op = optimizer.minimize(self.loss_op, global_step=self.global_step)
             # Summaries
             with tf.variable_scope('summaries'):
                 tf.scalar_summary('in sample loss', self.loss_op)
@@ -96,6 +96,9 @@ class TransferModel(object):
             hidden_size=model_params.hidden_size
         )
 
+    def train_op(self, optimizer):
+        return optimizer.minimize(self.loss_op, global_step=self.global_step)
+
     def restore_and_predict(self, input_tensor, model_checkpoint_path):
         saver = tf.train.Saver(tf.get_collection(tf.GraphKeys.VARIABLES, scope='transfer'))
         with tf.Session() as sess:
@@ -106,11 +109,13 @@ class TransferModel(object):
 
     def feed_for_predict(self, features):
         return {
-            self.features: features
+            self.features: features,
+            self.keep_prob: 1.0,
         }
 
-    def feed_for_training(self, features, label_ids):
+    def feed_for_training(self, features, label_ids, keep_prob=1.0):
         return {
             self.features: features,
-            self.label_ids: label_ids
+            self.label_ids: label_ids,
+            self.keep_prob: keep_prob,
         }

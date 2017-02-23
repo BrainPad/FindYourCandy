@@ -49,28 +49,50 @@ class DataSet(object):
         return self.features_data, self.label_ids_data
 
 
-class Trainer(object):
-    def __init__(self, epochs, train_dir, log_dir, batch_size, hidden_size):
+class TrainingConfig(object):
+    def __init__(self, epochs, batch_size, optimizer_class, optimizer_args, keep_prob=1.0):
         self.epochs = epochs
+        self.batch_size = batch_size
+        self.optimizer = optimizer_class(**optimizer_args)
+        self.optimizer_args = optimizer_args
+        self.keep_prob = keep_prob
+
+    def to_json(self):
+        optimizer_str = type(self.optimizer).__name__
+        return json.dumps({
+            "epochs": self.epochs,
+            "batch_size": self.batch_size,
+            "keep_prob": self.keep_prob,
+            "optimizer": {
+                "name": optimizer_str,
+                "args": self.optimizer_args,
+            }
+        })
+
+
+class Trainer(object):
+    def __init__(self, train_config, model_params, train_dir, log_dir):
+        self.train_config = train_config
+        self.model_params = model_params
         self.train_dir = train_dir
         self.log_dir = log_dir
-        self.batch_size = batch_size
-        self.hidden_size = hidden_size
+
+        self.model = model.TransferModel.from_model_params(self.model_params)
+        self.train_op = self.model.train_op(self.train_config.optimizer)
+
+        self._last_logged_loss = None
+
+        self._force_logging_interval = 200
+        self._check_interval = 10
+        self._threshold = 0.20
 
     def _epoch_log_path(self, num_epoch):
-        return os.path.join(self.log_dir, 'epochs', '{}.json'.format(num_epoch))
+        return os.path.join(self.log_dir, 'epochs', '{}.json'.format(str(num_epoch).zfill(6)))
 
     def train(self, dataset):
         n_samples = dataset.n_samples()
-        n_labels = len(dataset.labels)
 
         logger.info('Build transfer network.')
-
-        mo = model.TransferModel(
-            dataset.feature_size(),
-            n_labels,
-            hidden_size=self.hidden_size
-        )
 
         logger.info('Start training.')
         checkpoint_path = os.path.join(self.train_dir, 'model.ckpt')
@@ -83,30 +105,31 @@ class Trainer(object):
         with tf.Session() as sess:
             summary_writer = tf.train.SummaryWriter(self.log_dir, graph=sess.graph)
             sess.run(tf.initialize_all_variables())
-            for epoch in range(self.epochs):
+
+            for epoch in range(self.train_config.epochs):
                 # Shuffle data for batching
                 shuffled_idx = list(range(n_samples))
                 random.shuffle(shuffled_idx)
-                for begin_idx in range(0, n_samples, self.batch_size):
-                    batch_idx = shuffled_idx[begin_idx: begin_idx + self.batch_size]
-                    sess.run(mo.train_op, mo.feed_for_training(*dataset.get(batch_idx)))
+                for begin_idx in range(0, n_samples, self.train_config.batch_size):
+                    batch_idx = shuffled_idx[begin_idx: begin_idx + self.train_config.batch_size]
+                    sess.run(self.train_op, self.model.feed_for_training(*dataset.get(batch_idx)))
 
                 # Print and write summaries.
                 in_sample_loss, summary = sess.run(
-                    [mo.loss_op, mo.summary_op],
-                    mo.feed_for_training(*dataset.all())
+                    [self.model.loss_op, self.model.summary_op],
+                    self.model.feed_for_training(*dataset.all())
                 )
                 loss_log.append(in_sample_loss)
 
                 summary_writer.add_summary(summary, epoch)
 
-                # Save checkpoint per 100 epoch.
-                if epoch % 100 == 0 or epoch == self.epochs - 1:
+                if epoch % 200 == 0 or epoch == self.train_config.epochs - 1:
                     logger.info('{}th epoch end with loss {}.'.format(epoch, in_sample_loss))
-                    mo.saver.save(sess, checkpoint_path, global_step=mo.global_step)
+
+                if self._needs_logging(loss_log):
                     features = sess.run(
-                        [mo.softmax_op],
-                        mo.feed_for_training(*dataset.all())
+                        [self.model.softmax_op],
+                        self.model.feed_for_training(*dataset.all())
                     )
 
                     # write loss and predicted probabilities
@@ -135,8 +158,26 @@ class Trainer(object):
                         data['probs'] = probs_with_uri
                         f.write(json.dumps(data))
 
-            mo.saver.save(sess, checkpoint_path, global_step=mo.global_step)
+            self.model.saver.save(sess, checkpoint_path, global_step=self.model.global_step)
             summary_writer.close()
+
+    def _needs_logging(self, loss_log):
+        if len(loss_log) < self._check_interval or len(loss_log) % self._check_interval != 0:
+            return False
+        if len(loss_log) % self._force_logging_interval == 0:
+            return True
+
+        loss = loss_log[-1]
+        if self._last_logged_loss is None:
+            self._last_logged_loss = loss
+            return True
+
+        loss_change_rate = loss/self._last_logged_loss
+        if 1 - loss_change_rate > self._threshold:
+            self._last_logged_loss = loss
+            return True
+
+        return False
 
 
 def main(_):
@@ -149,7 +190,8 @@ def main(_):
     parser = argparse.ArgumentParser(description='Run Dobot WebAPI.')
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--hidden_size', type=int, default=3, help="Number of units in hidden layer.")
-    parser.add_argument('--epochs', type=int, default=1000, help="Number of epochs of training")
+    parser.add_argument('--epochs', type=int, default=2000, help="Number of epochs of training")
+    parser.add_argument('--learning_rate', type=float, default=1e-3)
     parser.add_argument('--data_dir', type=str, default='data', help="Directory for training data.")
     parser.add_argument('--log_dir', type=str, default='log', help="Directory for TensorBoard logs.")
     parser.add_argument('--train_dir', type=str, default='train', help="Directory for checkpoints.")
@@ -161,12 +203,12 @@ def main(_):
 
     dataset = DataSet.from_reader(reader)
 
-    trainer = Trainer(
-        epochs=args.epochs,
-        train_dir=args.train_dir,
-        log_dir=args.log_dir,
-        batch_size=args.batch_size,
-        hidden_size=args.hidden_size
+    train_config = TrainingConfig(
+        epochs=2000,
+        batch_size=16,
+        optimizer_class=tf.train.RMSPropOptimizer,
+        optimizer_args={"learning_rate": 1e-3},
+        keep_prob=0.9
     )
 
     params = model.ModelParams(
@@ -175,8 +217,24 @@ def main(_):
         features_size=dataset.feature_size()
     )
 
-    with tf.gfile.FastGFile(args.train_dir + '/params.json', 'w') as f:
+    trainer = Trainer(
+        train_config=train_config,
+        model_params=params,
+        train_dir=args.train_dir,
+        log_dir=args.log_dir,
+    )
+
+    if not tf.gfile.Exists(args.train_dir):
+        tf.gfile.MakeDirs(args.train_dir)
+
+    if not tf.gfile.Exists(args.log_dir):
+        tf.gfile.MakeDirs(args.log_dir)
+
+    with tf.gfile.FastGFile(os.path.join(args.train_dir, 'params.json'), 'w') as f:
         f.write(params.to_json())
+
+    with tf.gfile.FastGFile(os.path.join(args.log_dir, 'training.json'), 'w') as f:
+        f.write(train_config.to_json())
 
     trainer.train(dataset)
 
