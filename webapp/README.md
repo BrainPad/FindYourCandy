@@ -53,7 +53,11 @@ This software is design to work with Python2.7 under following condtion.
   - TCP port 18000 need to be exposed to browser.
 
 ## Run app
-In this setup senario, this command is not used. We use nginx+uWSGI instead.
+After tuning the camera, you can start webapp.
+```
+$ sudo systemctl start uwsgi-webapp.service
+```
+In this setup senario, the next command is not used. We use nginx+uWSGI instead.
 ```
 # Run app. This requres environment variables.
 $ python2 run.py  # Be sure to use python2.7

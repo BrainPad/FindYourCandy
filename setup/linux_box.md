@@ -71,14 +71,10 @@ $ sudo cp robot.ini /etc/uwsgi/
   (* You need to modify robot.ini according to your environment.)
 
 $ sudo mkdir -m 775 /var/run/uwsgi
+$ sudo chown brainpad:brainpad /var/run/uwsgi
 $ sudo mkdir -m 775 /var/log/uwsgi
-
-$ sudo uwsgi --ini /etc/uwsgi/webapp.ini
-$ sudo uwsgi --ini /etc/uwsgi/robot.ini
+$ sudo chown brainpad:brainpad /var/log/uwsgi
 
 $ sudo cp uwsgi-webapp.service /etc/systemd/system/
 $ sudo cp uwsgi-robot.service /etc/systemd/system/
-
-$ sudo systemctl enable uwsgi-webapp.service
-$ sudo systemctl enable uwsgi-robot.service
 ```
