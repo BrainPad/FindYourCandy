@@ -123,10 +123,8 @@ class Trainer(object):
 
                 summary_writer.add_summary(summary, epoch)
 
-                # Save checkpoint per 200 epoch.
                 if epoch % 200 == 0 or epoch == self.train_config.epochs - 1:
                     logger.info('{}th epoch end with loss {}.'.format(epoch, in_sample_loss))
-                    self.model.saver.save(sess, checkpoint_path, global_step=self.model.global_step)
 
                 if self._needs_logging(loss_log):
                     features = sess.run(
@@ -138,7 +136,7 @@ class Trainer(object):
                     probs = map(lambda a: a.tolist(), features[0])
                     max_l = max(loss_log)
                     loss_norm = [float(l) / max_l for l in loss_log]
-                    with tf.gfile.FastGFile(self._epoch_log_path(epoch), 'a') as f:
+                    with tf.gfile.FastGFile(self._epoch_log_path(epoch), 'w') as f:
                         data = {
                             'epoch': epoch,
                             'loss': loss_norm,
