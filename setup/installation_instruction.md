@@ -77,12 +77,17 @@ https://support.google.com/chromecast/answer/2998456?hl=en)
 (* If you have trouble with voice recognition of Nexus9, consider for external microphone.)
 
 ### Step6: Demo Application
-1. GCP for API service
+#### GCP for API service
+
 This demo is based on GCP. Create a credential associated to your project.
-(see https://console.developers.google.com/apis/ )
+Please enable follwoing services and set up API credential.
+- Vision API (see also: https://cloud.google.com/vision/docs/quickstart)
+- Natural Language API (see also: https://cloud.google.com/natural-language/docs/getting-started)
+- CloudML API (see also: https://cloud.google.com/ml/docs/how-tos/getting-set-up)
+
 ```
 $ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
 ```
-2. Configure and run demo
+2 Configure and run demo
   - See [README.md](../robot-arm) for robot-arm
   - See [README.md](../webapp) for webapp
