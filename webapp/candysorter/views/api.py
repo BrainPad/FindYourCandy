@@ -379,7 +379,7 @@ def status():
         if not cache.get(key):
             logger.info('Training completed, updating model: job_id=%s', job_id)
             new_checkpoint_dir = candy_trainer.download_checkpoints(job_id)
-            symlink_force(new_checkpoint_dir, Config.CLASSIFIER_MODEL_DIR)
+            symlink_force(os.path.basename(new_checkpoint_dir), Config.CLASSIFIER_MODEL_DIR)
             text_analyzer.reload()
             candy_classifier.reload()
             cache.set(key, True)
@@ -394,6 +394,15 @@ def labels():
 
 @api.route('/_reload', methods=['POST'])
 def reload():
+    text_analyzer.reload()
+    candy_classifier.reload()
+    return jsonify({})
+
+
+@api.route('/_reset', methods=['POST'])
+def reset():
+    symlink_force(os.path.basename(Config.CLASSIFIER_MODEL_DIR_INITIAL),
+                  Config.CLASSIFIER_MODEL_DIR)
     text_analyzer.reload()
     candy_classifier.reload()
     return jsonify({})
