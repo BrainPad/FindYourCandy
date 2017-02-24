@@ -57,12 +57,13 @@ class DefaultConfig(object):
 
     TRAIN_LABEL_AREA_HEIGHT = 285
 
-    CLOUD_ML_BUCKET        = 'gs://candy-sorter-ml'
-    CLOUD_ML_PACKAGE_URIS  = ['gs://candy-sorter-ml/package/trainer-0.0.0.tar.gz']
+    # replace "YOUR-OWN-BUCKET-NAME" to your own bucket name
+    CLOUD_ML_BUCKET        = 'gs://{YOUR-OWN-BUCKET-NAME}'
+    CLOUD_ML_PACKAGE_URIS  = ['gs://{YOUR-OWN-BUCKET-NAME}/package/trainer-0.0.0.tar.gz']
     CLOUD_ML_PYTHON_MODULE = 'trainer.train'
-    CLOUD_ML_TRAIN_DIR     = 'gs://candy-sorter-ml/{job_id}/checkpoints'
-    CLOUD_ML_LOG_DIR       = 'gs://candy-sorter-ml/logs/{job_id}'
-    CLOUD_ML_DATA_DIR      = 'gs://candy-sorter-ml/{job_id}/features'
+    CLOUD_ML_TRAIN_DIR     = 'gs://{YOUR-OWN-BUCKET-NAME}/{job_id}/checkpoints'
+    CLOUD_ML_LOG_DIR       = 'gs://{YOUR-OWN-BUCKET-NAME}/logs/{job_id}'
+    CLOUD_ML_DATA_DIR      = 'gs://{YOUR-OWN-BUCKET-NAME}/{job_id}/features'
 
 
 class DevelopmentConfig(DefaultConfig):
