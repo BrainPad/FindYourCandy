@@ -34,7 +34,8 @@ class CandyDetector(object):
                  dilate_iter=3,
                  bg_size_filter=2000,
                  sure_fg_thres=0.5,
-                 restore_fg_thres=0.0):
+                 restore_fg_thres=0.0,
+                 box_dim_thres=50):
         self.histgram_band = histgram_band
         self.histgram_thres = histgram_thres
 
@@ -50,6 +51,7 @@ class CandyDetector(object):
         self.bg_size_filter = bg_size_filter
         self.sure_fg_thres = sure_fg_thres
         self.restore_fg_thres = restore_fg_thres
+        self.box_dim_thres = box_dim_thres
 
     @classmethod
     def from_config(cls, config):
@@ -64,7 +66,8 @@ class CandyDetector(object):
                    dilate_iter=config.CANDY_DETECTOR_DILATE_ITER,
                    bg_size_filter=config.CANDY_DETECTOR_BG_SIZE_FILTER,
                    sure_fg_thres=config.CANDY_DETECTOR_SURE_FG_THRES,
-                   restore_fg_thres=config.CANDY_DETECTOR_RESTORE_FG_THRES)
+                   restore_fg_thres=config.CANDY_DETECTOR_RESTORE_FG_THRES,
+                   box_dim_thres=config.CANDY_DETECTOR_BOX_DIM_THRES)
 
     def detect(self, img):
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -180,6 +183,8 @@ class CandyDetector(object):
             contour = _contours[0]
 
             box_coords, box_dims, box_centroid = _bounding_box_of(contour)
+            if any([dim <= self.box_dim_thres for dim in box_dims]):
+                continue
             cropped_img = _crop_candy(img, markers != i, box_coords, box_dims, box_centroid)
 
             candies.append(Candy(box_coords=box_coords,

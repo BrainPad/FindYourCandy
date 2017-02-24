@@ -296,9 +296,6 @@ def capture():
     candies = candy_detector.detect(img_candies)
     logger.info('  %d candies detected.', len(candies))
 
-    candies = _filter_candies(candies)
-    logger.info('  %d candies after filtering.', len(candies))
-
     # Save candy images
     logger.info('Saving candy images.')
     candy_files = [_candy_file(save_dir, i) for i, c in enumerate(candies)]
@@ -457,11 +454,3 @@ def _reduce_dimension(speech_sim, candy_sims):
 
 def _job_id(session_id):
     return 'candy_sorter_{}'.format(session_id)
-
-
-def _filter_candies(candies):
-    filtered = []
-    for candy in candies:
-        if all([dim > 50 for dim in candy.box_dims]):
-            filtered.append(candy)
-    return filtered
