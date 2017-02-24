@@ -133,7 +133,7 @@ def similarities():
     try:
         speech_sim = text_analyzer.calc_similarities(words)
     except Exception as e:
-        # FIXME
+        # FIXME: handle error when calculating similarities
         logger.error('Error when calculating similarities: ' + e.message)
         speech_sim = text_analyzer.calc_similarities(['chocolate'])
 
