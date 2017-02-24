@@ -81,7 +81,7 @@ class Trainer(object):
         self.model = model.TransferModel.from_model_params(self.model_params)
         self.train_op = self.model.train_op(self.train_config.optimizer)
 
-        self._sleep_sec = 0.2
+        self._sleep_sec = 0.1
 
         self._last_logged_loss = None
 
