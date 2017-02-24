@@ -31,7 +31,11 @@ This software is design to work with Python2.7 under following condition.
   - TCP port 18001 need to be exposed to browser.
 
 ## Run
-In this setup senario, this command is not used. We use nginx+uWSGI instead.
+After tuning the robot, you can start robot-arm.
+```
+$ sudo systemctl start uwsgi-robot.service
+```
+In this setup senario, the next command is not used. We use nginx+uWSGI instead.
 ```
 # Run app. This requres environment variables.
 $ python2 run_api.py  # Be sure to use python2.7

@@ -3,12 +3,13 @@ Description=uWSGI service for robot
 After=syslog.target
 
 [Service]
-ExecStartPre=/bin/mkdir -m 775 /var/run/uwsgi
+ExecStartPre=/bin/mkdir -p -m 775 /var/run/uwsgi
 ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/robot.ini
+RuntimeDirectory=/var/run/uwsgi
 Restart=always
 KillSignal=SIGTERM
 StandardError=syslog
-Type=notify
+Type=forking
 NotifyAccess=all
 
 [Install]

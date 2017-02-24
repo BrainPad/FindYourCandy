@@ -47,7 +47,7 @@ Note: due to unavailability of CDVU-06IP extender unit.
 The following instructions illustrates how to adjust the camera position.
 
 1. Boot up linux box and login the desktop.
-2. Execute [script/camera_tune.py](./script/camera_tune.py) that are included in DEMO software. And see the camera view in the window.
+2. Execute [(cd script ; python2 camera_tune.py)](./script/camera_tune.py) that are included in DEMO software. And see the camera view in the window.
 3. If you cannot see OK sign in the window, tweak the camera or its extension and have whole image of A3 paper.
   - You may also try to get better focus by switching between S and C on the camera.
 4. You may click on left mouse button to exit this software.
@@ -55,12 +55,14 @@ The following instructions illustrates how to adjust the camera position.
 ![](./image/camera_calibration.png)
 
 ### Step4: Robot Arm Caribration
-1. Execute [script/robot_tune.py](./script/robot_tune.py) to start tuning the coordinate of arm.
-2. To avoid damaging the robot arm during this process, hold the arm by your hand first. And then push the release button (which is marked ‘unlock’ ) with the other hand. Please be aware when releasing the robot arm, it may start falling instantly.
-3. You slowly land the arm edge to the center of “Maker A”.
-4. Hit “Enter” key.
-5. Repeat above 2 and 3 for Marker D and E.
-6. The program ends automatically.
+(* Read the safety manuals of your Robot Arm , befor proceeding this section.)
+1. Execute [(cd script ; python2 robot_tune.py)](./script/robot_tune.py) to start tuning the coordinate of arm.
+2. Hit `Enter` key. to initialize the robot arm.
+3. Push the `release button` (which has symbol of `unlock` ) while you holding the robot arm by the other hand. Please be aware when the button is pressed, the robot arm looses friction and will start falling instantly. To avoid damaging your robot or desk, you should always assist robot arm when you press `release button`.
+4. Slowly land the arm edge to the center of `Maker A`. (still pressing the button.)
+5. Hit `Enter` key.
+6. Repeat above process for 3,4 and 5 for Marker D and E.
+7. The program ends automatically.
 
 ![](./image/robot_calibration.png)
 
@@ -72,13 +74,14 @@ The following instructions illustrates how to adjust the camera position.
 4. Follow the “Set up Chromecast” on the [google support page](
 https://support.google.com/chromecast/answer/2998456?hl=en)
 \(there is instruction for Android 4.1 and higher\).
+(* If you have trouble with voice recognition of Nexus9, consider for external microphone.)
 
 ### Step6: Demo Application
 1. GCP for API service
 This demo is based on GCP. Create a credential associated to your project.
 (see https://console.developers.google.com/apis/ )
 ```
-$ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_path"
+$ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
 ```
 2. Configure and run demo
   - See [README.md](../robot-arm) for robot-arm
