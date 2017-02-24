@@ -24,6 +24,7 @@ from candysorter.ext.google.cloud.ml import State
 from candysorter.models.images.calibrate import ImageCalibrator
 from candysorter.models.images.classify import CandyClassifier
 from candysorter.models.images.detect import CandyDetector, detect_labels
+from candysorter.models.images.filter import exclude_unpickables
 from candysorter.models.images.train import CandyTrainer
 from candysorter.utils import load_class, symlink_force
 
@@ -148,6 +149,11 @@ def similarities():
     snapshot_file = os.path.join(save_dir, 'snapshot.jpg')
     snapshot_url = _image_url(snapshot_file)
     cv2.imwrite(snapshot_file, img)
+
+    # Exclude unpickupables
+    logger.info('Excluding unpickables.')
+    candies = exclude_unpickables(image_calibrator, candies)
+    logger.info('  %d candies pickable.', len(candies))
 
     # Save candy images
     logger.info('Saving candy images.')
