@@ -57,6 +57,7 @@ def pickup():
     xy_conv = cv.convert(x, y)
 
     dobot = get_dobot(current_app.config['DOBOT_SERIAL_PORT'])
+    dobot.adjust_z(z_high)
     dobot.pickup(xy_conv[0], xy_conv[1], z_low=z_low, z_high=z_high, velocity=v, accel=a)
     dobot.move(dest[0], dest[1], 0,  velocity=v, accel=a)
     dobot.pump(0)

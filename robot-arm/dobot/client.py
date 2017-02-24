@@ -77,6 +77,11 @@ class Dobot(object):
             time.sleep(sleep_sec)
             self.linear_move(x, y, z_high, velocity, accel)
 
+    def adjust_z(self, z):
+        self.wait()
+        pose = self.serial.call(command.GetPose())
+        self.linear_move(pose['x'], pose['y'], z)
+
     def pump(self, on):
         self.serial.call(command.SetEndEffectorSuctionCup(1, on))
 
