@@ -55,7 +55,7 @@ class DefaultConfig(object):
 
     PICKUP_ENDOPOINT = 'http://localhost:18001/api/pickup'
 
-    TRAIN_LABEL_AREA_HEIGHT = 400
+    TRAIN_LABEL_AREA_HEIGHT = 285
 
     CLOUD_ML_BUCKET        = 'gs://candy-sorter-ml'
     CLOUD_ML_PACKAGE_URIS  = ['gs://candy-sorter-ml/package/trainer-0.0.0.tar.gz']
