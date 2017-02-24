@@ -130,7 +130,12 @@ def similarities():
 
     # Calculate speech similarity
     logger.info('Calculating speech similarity.')
-    speech_sim = text_analyzer.calc_similarities(words)
+    try:
+        speech_sim = text_analyzer.calc_similarities(words)
+    except Exception as e:
+        # FIXME
+        logger.error('Error when calculating similarities: ' + e.message)
+        speech_sim = text_analyzer.calc_similarities(['chocolate'])
 
     # Capture image
     logger.info('Capturing image.')

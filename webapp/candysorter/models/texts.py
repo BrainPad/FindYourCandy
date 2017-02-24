@@ -61,6 +61,8 @@ class TextAnalyzer(object):
 
     def calc_similarities(self, words):
         # TODO: multi words per label
+        words = filter(lambda w_: w_ in self.model, words)
+        words = map(lambda w_: w_.lower(), words)
         avg_v = sum([self.model[w] for w in words]) / len(words)
         return np.array([1. - spatial.distance.cosine(avg_v, self.model[l]) for l in self.labels])
 
