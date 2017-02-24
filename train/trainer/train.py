@@ -9,6 +9,7 @@ import os
 import random
 
 import tensorflow as tf
+import time
 
 import trainer.model as model
 from trainer.utils import TrainingFeaturesDataReader
@@ -80,6 +81,8 @@ class Trainer(object):
         self.model = model.TransferModel.from_model_params(self.model_params)
         self.train_op = self.model.train_op(self.train_config.optimizer)
 
+        self._sleep_sec = 0.2
+
         self._last_logged_loss = None
 
         self._force_logging_interval = 200
@@ -123,7 +126,7 @@ class Trainer(object):
 
                 summary_writer.add_summary(summary, epoch)
 
-                if epoch % 200 == 0 or epoch == self.train_config.epochs - 1:
+                if epoch % 100 == 0 or epoch == self.train_config.epochs - 1:
                     logger.info('{}th epoch end with loss {}.'.format(epoch, in_sample_loss))
 
                 if self._needs_logging(loss_log):
@@ -157,6 +160,10 @@ class Trainer(object):
 
                         data['probs'] = probs_with_uri
                         f.write(json.dumps(data))
+
+                # FIXME: sleep to show convergence slowly on UI
+                if epoch < 200 and loss_log[-1] > max(loss_log) * 0.01:
+                    time.sleep(self._sleep_sec)
 
             self.model.saver.save(sess, checkpoint_path, global_step=self.model.global_step)
             summary_writer.close()
@@ -208,7 +215,7 @@ def main(_):
         batch_size=16,
         optimizer_class=tf.train.RMSPropOptimizer,
         optimizer_args={"learning_rate": 1e-3},
-        keep_prob=0.9
+        keep_prob=1.0,
     )
 
     params = model.ModelParams(
