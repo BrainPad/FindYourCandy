@@ -24,7 +24,7 @@ from web.config import get_config
 
 
 def create_app(dobot_port, tuner_file):
-    config = get_config(os.getenv('FLASK_ENV', 'dev'), dobot_port, tuner_file)
+    config = get_config(os.getenv('FLASK_ENV', 'dev'), dobot_port)
 
     app = Flask(__name__)
 

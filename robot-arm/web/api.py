@@ -50,7 +50,7 @@ def pickup():
 
     dest = cfg['DOBOT_SERVE_XY']
     z_high = cfg['DOBOT_Z_HIGH']
-    z_low = cfg['DOBOT_Z_LOW']
+    z_low = cv.z_low
     v = cfg['DOBOT_MAX_VELOCITY']
     a = cfg['DOBOT_MAX_ACCERALATION']
 

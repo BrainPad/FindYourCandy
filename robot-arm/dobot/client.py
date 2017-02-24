@@ -54,6 +54,7 @@ class Dobot(object):
     def initialize(self):
         self.serial.call(command.ClearAllAlarmsState())
         self.serial.call(command.SetQueuedCmdClear())
+        self.adjust_z(0)
         self.serial.call(command.SetHomeCmd())
 
     def move(self, x, y, z, velocity=200, accel=200, jump=True):
