@@ -9,7 +9,7 @@ from werkzeug.contrib.cache import SimpleCache
 class Cache(object):
 
     def __init__(self):
-        self.cache = SimpleCache(default_timeout=600)
+        self.cache = SimpleCache(default_timeout=1800)
 
     def get(self, key):
         return self.cache.get(self._key(key))
