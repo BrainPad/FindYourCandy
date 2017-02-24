@@ -448,6 +448,6 @@ def _job_id(session_id):
 def _filter_candies(candies):
     filtered = []
     for candy in candies:
-        if all([dim > 0 for dim in candy.box_dims]):
+        if all([dim > 50 for dim in candy.box_dims]):
             filtered.append(candy)
     return filtered
