@@ -88,21 +88,34 @@ $ python2 run.py  # Be sure to use python2.7
 ```
 
 ## UI
-Chrome web browser
-- http://localhost:18000/predict
+- Acceess http://{LINUX_BOX_IP}:18000/predict by chrome browser after app launched
+- We provide "Full Screen Mode". Please setup following instruction.
+
+#### setup for Full Screen Mode
+- open setup menu and tap "Add to Home screen"
+![](../setup/image/tablet_ui/1.png)
+
+- name to icon on Home screen
+![](../setup/image/tablet_ui/2.png)
+
+- tap icon
+![](../setup/image/tablet_ui/3.png)
+![](../setup/image/tablet_ui/4.png)
+![](../setup/image/tablet_ui/5.png)
+
 
 
 ## API example
 Morphological Analysis
 
 ```sh
-$ curl -i -H "Content-type: application/json" -X POST http://localhost:18000/api/morphs \
+$ curl -i -H "Content-type: application/json" -X POST http://{LINUX_BOX_IP}:18000/api/morphs \
     -d '{"text": "I like chewy chocolate candy", "id": "test"}'
 ```
 
 Similarities
 
 ```sh
-$ curl -i -H "Content-type: application/json" -X POST http://localhost:18000/api/similarities \
+$ curl -i -H "Content-type: application/json" -X POST http://{LINUX_BOX_IP}:18000/api/similarities \
     -d '{"text": "I like chewy chocolate candy", "id": "testid"}'
 ```
