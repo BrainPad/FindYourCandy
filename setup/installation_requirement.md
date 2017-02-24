@@ -1,4 +1,4 @@
-Installation requirements
+Requirements
 ===
 
 ## Installation Requirements
