@@ -64,7 +64,23 @@ class TextAnalyzer(object):
         words = map(lambda w_: w_.lower(), words)
         words = filter(lambda w_: w_ in self.model, words)
         avg_v = sum([self.model[w] for w in words]) / len(words)
-        return np.array([1. - spatial.distance.cosine(avg_v, self.model[l]) for l in self.labels])
+        return np.array([
+            1. - spatial.distance.cosine(avg_v, l_v)
+            for l_v in self._label_vectors()
+        ])
+
+    def _label_vectors(self):
+        vectors = []
+        for l in self.labels:
+            # e.g. 'SWEET CHOCOLATE' -> ['sweet', 'chocolate']
+            words = [w.lower() for w in l.split(' ')]
+            words = [w for w in words if w in self.model]
+            if not words:
+                v = (np.random.rand(self.model.vector_size) - 0.5) / self.model.vector_size
+            else:
+                v = sum([self.model[w] for w in words]) / len(words)
+            vectors.append(v)
+        return vectors
 
 
 class FakeTextAnalyzer(TextAnalyzer):
