@@ -16,14 +16,11 @@ logger = logging.getLogger(__name__)
 
 
 class TextAnalyzer(object):
-    _PARTS_OF_SPEECH = set([
-        language.PartOfSpeech.ADJECTIVE,
-        language.PartOfSpeech.NOUN,
-    ])
 
-    def __init__(self, params_file, model_file):
+    def __init__(self, params_file, model_file, pos_weights):
         self.params_file = params_file
         self.model_file = model_file
+        self.pos_weights = pos_weights
 
         self.labels = None
         self.model = None
@@ -32,7 +29,8 @@ class TextAnalyzer(object):
     @classmethod
     def from_config(cls, config):
         return cls(params_file=os.path.join(config.CLASSIFIER_MODEL_DIR, 'params.json'),
-                   model_file=config.WORD2VEC_MODEL_FILE)
+                   model_file=config.WORD2VEC_MODEL_FILE,
+                   pos_weights=config.POS_WEIGHTS)
 
     def init(self):
         self._load_model()
@@ -59,15 +57,28 @@ class TextAnalyzer(object):
     def filter_tokens(self, tokens):
         return [t.lemma for t in tokens if t.pos.tag in self._PARTS_OF_SPEECH]
 
-    def calc_similarities(self, words):
-        # TODO: multi words per label
-        words = map(lambda w_: w_.lower(), words)
-        words = filter(lambda w_: w_ in self.model, words)
-        avg_v = sum([self.model[w] for w in words]) / len(words)
+    def calc_similarities(self, tokens):
+        t_v = self._tokens_vector(tokens)
         return np.array([
-            1. - spatial.distance.cosine(avg_v, l_v)
+            1. - spatial.distance.cosine(t_v, l_v)
             for l_v in self._label_vectors()
         ])
+
+    def _tokens_vector(self, tokens):
+        _tokens = [(t.lemma.lower(), t.pos.tag) for t in tokens]
+        _tokens = [t for t in _tokens if t[0] in self.model]
+
+        # no words
+        if not _tokens:
+            return (np.random.rand(self.model.vector_size) - 0.5) / self.model.vector_size
+
+        # valid tokens
+        valids = [t for t in _tokens if self._pos_weight(t[1]) > 0.]
+        if valids:
+            return sum([self.model[w] * self._pos_weight(p) for w, p in valids]) / len(valids)
+
+        # all tokens
+        return sum([self.model[w] for w, _ in _tokens]) / len(_tokens)
 
     def _label_vectors(self):
         vectors = []
@@ -81,6 +92,9 @@ class TextAnalyzer(object):
                 v = sum([self.model[w] for w in words]) / len(words)
             vectors.append(v)
         return vectors
+
+    def _pos_weight(self, pos):
+        return self.pos_weights.get(pos, 0.)
 
 
 class FakeTextAnalyzer(TextAnalyzer):

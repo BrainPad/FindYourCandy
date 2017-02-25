@@ -5,6 +5,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import logging
 import os
 
+from candysorter.ext.google.cloud import language
+
 
 # flake8: noqac
 class DefaultConfig(object):
@@ -32,6 +34,11 @@ class DefaultConfig(object):
     CLASSIFIER_MODEL_DIR         = os.path.join(MODEL_DIR, 'classifier')
     CLASSIFIER_MODEL_DIR_INITIAL = os.path.join(MODEL_DIR, 'classifier_initial')
     INCEPTION_MODEL_FILE         = os.path.join(MODEL_DIR, 'classify_image_graph_def.pb')
+
+    POS_WEIGHTS = {
+        language.PartOfSpeech.ADJECTIVE: 1.0,
+        language.PartOfSpeech.NOUN: 3.0,
+    }
 
     CANDY_DETECTOR_HISTGRAM_BAND    = (0, 255)
     CANDY_DETECTOR_HISTGRAM_THRES   = 2.7e-3
