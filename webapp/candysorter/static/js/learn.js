@@ -48,7 +48,7 @@ $(function () {
 						$(".cap-labels").append("<dd>" + data.labels[i] + "</dd>");
 					}
 					for (var i in data.urls) {
-						$(".cap-images").append("<dd style='background-image:url(" + data.urls[i] + '?' + (new Date()).getTime() + ")'></dd>");
+						$(".cap-images").append("<dd style='background-image:url(" + data.urls[i] + ")'></dd>");
 						$(".cap-images dd:last-child").css("animation-delay", parseInt(i) / 10 + "s");
 						$(".cap-step").text(stepFlg);
 						capDat.push(data.urls[i]);

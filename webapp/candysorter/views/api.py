@@ -8,6 +8,7 @@ import glob
 import logging
 import os
 import shutil
+import string
 import time
 
 import cv2
@@ -26,7 +27,7 @@ from candysorter.models.images.classify import CandyClassifier
 from candysorter.models.images.detect import CandyDetector, detect_labels
 from candysorter.models.images.filter import exclude_unpickables
 from candysorter.models.images.train import CandyTrainer
-from candysorter.utils import load_class, symlink_force
+from candysorter.utils import load_class, random_str, symlink_force
 
 logger = logging.getLogger(__name__)
 
@@ -430,15 +431,18 @@ def _create_save_dir(session_id):
 
 
 def _candy_file(save_dir, i):
-    # e.g. /tmp/download/image/20170209_130952_reqid/candy_001.png
-    return os.path.join(save_dir, 'candy_{:02d}.jpg'.format(i))
+    # e.g. /tmp/download/image/20170209_130952_reqid/candy_01_xxxxxxxx.png
+    return os.path.join(
+        save_dir,
+        'candy_{:02d}_{}.jpg'.format(i, random_str(8, string.lowercase + string.digits))
+    )
 
 
 def _image_url(image_file):
-    # e.g. 20170209_130952_reqid/candy_001.png
+    # e.g. 20170209_130952_reqid/candy_01_xxxxxxxx.png
     rel = os.path.relpath(image_file, Config.DOWNLOAD_IMAGE_DIR)
 
-    # e.g. /image/20170209_130952_reqid/candy_001.png
+    # e.g. /image/20170209_130952_reqid/candy_01_xxxxxxxx.png
     return url_for('ui.image', filename=rel)
 
 

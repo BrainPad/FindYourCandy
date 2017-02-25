@@ -5,6 +5,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import errno
 import importlib
 import os
+import random
+import string
 
 
 def load_class(name):
@@ -22,3 +24,7 @@ def symlink_force(source, link_name):
             os.symlink(source, link_name)
         else:
             raise e
+
+
+def random_str(length, chars=string.ascii_letters + string.digits):
+    return ''.join([random.choice(chars) for i in range(length)])
