@@ -6,6 +6,7 @@ $(function () {
 	var simUrl = "/api/similarities"; // API for Similarity analysis
 	var pickUrl = "/api/pickup"; // API for pick up candy
 	var simSec = 5000; // delay time
+	var simNoWaitNum = 5;
 	var plotSec = 5000; // display time of scatter plot(milisec）
 	var camSec = 3000; // display tiem of camera image(milisec)
 
@@ -149,11 +150,12 @@ $(function () {
 				console.log(textStatus);
 			},
 			success: function (data) {
+				var sec = data.similarities.embedded.length >= simNoWaitNum ? 0 : simSec;
 				sim = data;
 				setTimeout(function () {
 					force();
 					plot();
-				}, simSec);
+				}, sec);
 			}
 		});
 	};
