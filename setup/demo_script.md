@@ -4,7 +4,7 @@ In learning mode, you give labels to candies and let them learn. This will let A
 In Serving mode, the whole system takes advantage of the learning result and serves sweets according to the user's taste.
 
 ## Learning Mode
-- Prepare labels that describe candies.
+- Prepare labels that describe candies. (ex: Gum, Soda, Cheese, Salty)
 - Perform camera shooting and label matching for 4 times.
 
 
@@ -20,6 +20,10 @@ In Serving mode, the whole system takes advantage of the learning result and ser
 6. Wait for about one minutes until it finishes up learning.
 ![](./image/learn_06.png)
 7. When learning is successful, you may proceed by pressing 'TRY SERVING' button.
+
+
+- When you want reset what it has learned,
+  - see [README.md](../webapp).
 
 ## Serving Mode
 - In Serving mode, place candies only on the fan-shaped part of the A3 marker paper. The grayed-out area represents unreachable range of the robot arm.

@@ -89,6 +89,6 @@ Please enable follwoing services and set up API credential.
 ```
 $ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
 ```
-2 Configure and run demo
+#### Configure and run demo
   - See [README.md](../robot-arm) for robot-arm
   - See [README.md](../webapp) for webapp

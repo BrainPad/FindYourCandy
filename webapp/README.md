@@ -7,7 +7,7 @@ This software is design to work with Python2.7 under following condtion.
 - This software depends on the following libraries:
   - OpenCV3.2 (need to be compiled from source.)
   - Refer to installation_instructions.md for installation.
-  - Softwares you need to install from pip
+  - Softwares you install by pip
   ```
   $ pip install -r requirements.txt
   # ex)
@@ -106,16 +106,22 @@ $ python2 run.py  # Be sure to use python2.7
 
 
 ## API example
-Morphological Analysis
-
+##### Morphological Analysis
 ```sh
 $ curl -i -H "Content-type: application/json" -X POST http://{LINUX_BOX_IP}:18000/api/morphs \
     -d '{"text": "I like chewy chocolate candy", "id": "test"}'
 ```
 
-Similarities
+##### Similarities
 
 ```sh
 $ curl -i -H "Content-type: application/json" -X POST http://{LINUX_BOX_IP}:18000/api/similarities \
     -d '{"text": "I like chewy chocolate candy", "id": "testid"}'
+```
+
+##### Reset the model for the relation of labels and candies
+If you keep teaching labels to the systen, at some point you want to clear all them out.
+```sh
+$ curl -i -H "Content-type: application/json" -X POST http://{LINUX_BOX_IP}:18000/api/_reset \
+    -d '{"id": "testid"}'
 ```
