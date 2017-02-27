@@ -120,7 +120,7 @@ $ curl -i -H "Content-type: application/json" -X POST http://{LINUX_BOX_IP}:1800
 ```
 
 ##### Reset the model for the relation of labels and candies
-If you keep teaching labels to the systen, at some point you want to clear all them out.
+If you keep teaching labels to the system, at some point you want to clear all them out.
 ```sh
 $ curl -i -H "Content-type: application/json" -X POST http://{LINUX_BOX_IP}:18000/api/_reset \
     -d '{"id": "testid"}'
