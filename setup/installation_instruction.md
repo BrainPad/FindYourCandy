@@ -50,7 +50,7 @@ The following instructions illustrates how to adjust the camera position.
 2. Execute [(cd script ; python2 camera_tune.py)](./script/camera_tune.py) that is included in this demo software. And see the camera view in the window.
 3. If you cannot see 'OK' sign in the window, tweak the camera or its extension and have whole image of A3 paper.
    - You may also try to get better focus by switching the AF slide between S and C on the camera.
-   - In most cases, keeping the slide to S and press `[・] (focus)` button a few times does good in our environment.
+   - In most cases, keeping the slide to S and pressing `[・] (focus)` button a few times does good in our environment.
 4. You may click on left mouse button to exit this software.
 
 ![](./image/camera_calibration.png)
@@ -92,5 +92,3 @@ $ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
 2 Configure and run demo
   - See [README.md](../robot-arm) for robot-arm
   - See [README.md](../webapp) for webapp
-
-  
