@@ -53,7 +53,7 @@ class ImageCalibrator(object):
                     raise RuntimeError('Failed to detect markers and camera was moved.')
             return self._prev_valid_corners
 
-        raise RuntimeError('Failed to detect markers and not previously detected markers.')
+        raise RuntimeError('Failed to detect markers and found no successful record.')
 
     def get_coordinate(self, x, y):
         return (self.area[1] / 2. - y) / self.scale, (self.area[0] / 2. - x) / self.scale

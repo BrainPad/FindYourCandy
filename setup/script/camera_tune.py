@@ -20,6 +20,7 @@ sys.path.append('../../webapp')
 from candysorter.models.images.calibrate import ImageCalibrator
 
 
+calibrator = ImageCalibrator(area=(1100, 1625), scale=550)
 
 'Python needs class definition to make valuables volatile'
 class Flag:
@@ -39,7 +40,6 @@ def write_OK(image):
 
 def is_OK(image):
   try:
-    calibrator = ImageCalibrator(area=(1100, 1625), scale=550)
     #image_check = calibrator.calibrate(image)
     corners = calibrator.detect_corners(image)
     #print corners
