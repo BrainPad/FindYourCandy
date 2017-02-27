@@ -142,7 +142,8 @@ $(function () {
 			url: simUrl,
 			data: JSON.stringify({
 				"id": pid,
-				"text": speechTxt
+				"text": speechTxt,
+				"lang": lang
 			}),
 			error: function (textStatus) {
 				console.log(textStatus);

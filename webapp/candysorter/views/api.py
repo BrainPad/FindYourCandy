@@ -96,10 +96,11 @@ def morphs():
     text = request.json.get('text')
     if not text:
         abort(400)
+    lang = request.json.get('lang', 'en')
 
     logger.info('=== Analyze text: id=%s ===', g.id)
 
-    tokens = text_analyzer.analyze_syntax(text)
+    tokens = text_analyzer.analyze_syntax(text, lang)
     return jsonify(morphs=[
         dict(word=t.text.content,
              depend=dict(label=t.dep.label, index=[
@@ -117,6 +118,7 @@ def similarities():
     text = request.json.get('text')
     if not text:
         abort(400)
+    lang = request.json.get('lang', 'en')
 
     logger.info('=== Calculate similarities: id=%s ===', g.id)
 
@@ -126,11 +128,11 @@ def similarities():
     # Analyze text
     logger.info('Analyaing text.')
     labels = text_analyzer.labels
-    tokens = text_analyzer.analyze_syntax(text)
+    tokens = text_analyzer.analyze_syntax(text, lang)
 
     # Calculate speech similarity
     logger.info('Calculating speech similarity.')
-    speech_sim = text_analyzer.calc_similarities(tokens)
+    speech_sim = text_analyzer.calc_similarities(tokens, lang)
 
     # Capture image
     logger.info('Capturing image.')
