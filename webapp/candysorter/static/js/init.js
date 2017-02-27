@@ -5,9 +5,9 @@ $(function () {
 	var morUrl = "/api/morphs"; // API for Morphological analysis
 	var simUrl = "/api/similarities"; // API for Similarity analysis
 	var pickUrl = "/api/pickup"; // API for pick up candy
-	var simSec = 10000; // delay time
-	var plotSec = 10000; // display time of scatter plot(milisec）
-	var camSec = 10000; // display tiem of camera image(milisec)
+	var simSec = 5000; // delay time
+	var plotSec = 5000; // display time of scatter plot(milisec）
+	var camSec = 3000; // display tiem of camera image(milisec)
 
 	// variables
 	var recognition = new webkitSpeechRecognition();
@@ -142,7 +142,8 @@ $(function () {
 			url: simUrl,
 			data: JSON.stringify({
 				"id": pid,
-				"text": speechTxt
+				"text": speechTxt,
+				"lang": lang
 			}),
 			error: function (textStatus) {
 				console.log(textStatus);
