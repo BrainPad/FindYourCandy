@@ -43,7 +43,16 @@ class DefaultConfig(object):
     CLASS_TEXT_ANALYZER = 'candysorter.models.texts.TextAnalyzer'
     CLASS_IMAGE_CAPTURE = 'candysorter.models.images.capture.ImageCapture'
 
-    WORD2VEC_MODEL_FILE          = os.path.join(MODEL_DIR, 'GoogleNews-vectors-negative300.bin.gz')
+    WORD2VEC_MODEL_FILES = {
+        'en': {
+            'file': os.path.join(MODEL_DIR, 'GoogleNews-vectors-negative300.bin.gz'),
+            'binary': True,
+        },
+        'ja': {
+            'file': os.path.join(MODEL_DIR, 'model.vec'),
+            'binary': False,
+        },
+    }
     CLASSIFIER_MODEL_DIR         = os.path.join(MODEL_DIR, 'classifier')
     CLASSIFIER_MODEL_DIR_INITIAL = os.path.join(MODEL_DIR, 'classifier_initial')
     INCEPTION_MODEL_FILE         = os.path.join(MODEL_DIR, 'classify_image_graph_def.pb')
@@ -55,8 +64,9 @@ class DefaultConfig(object):
 
     CANDY_DETECTOR_HISTGRAM_BAND    = (0, 255)
     CANDY_DETECTOR_HISTGRAM_THRES   = 2.7e-3
-    CANDY_DETECTOR_EDGE3_thres      = 250
-    CANDY_DETECTOR_EDGE5_thres      = 230
+    CANDY_DETECTOR_BIN_THRES        = 150
+    CANDY_DETECTOR_EDGE3_THRES      = 250
+    CANDY_DETECTOR_EDGE5_THRES      = 230
     CANDY_DETECTOR_MARGIN           = (30, 30)
     CANDY_DETECTOR_CLOSING_ITER     = 1
     CANDY_DETECTOR_OPENING_ITER     = 10
