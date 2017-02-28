@@ -28,7 +28,7 @@ api = Blueprint('dobot', __name__)
 
 
 def get_dobot(port):
-    logging.info('Opening serial port {} to communicating with dobot.'.format(port))
+    logging.info('Opening serial port {} to communicate with dobot.'.format(port))
     return Dobot(port, DEFAULT_BAUDRATE)
 
 
