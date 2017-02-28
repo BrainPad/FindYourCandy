@@ -6,7 +6,7 @@ Linux Setup
 - Choose “standard system utilities” and “OpenSSH server” as software selection
 - Create user:  brainpad (group is also brainpad by default)
 
-## Base setup
+## Basic setup
 ```
 $ sudo apt-get update && sudo apt-get upgrade -y && sudo reboot
 $ sudo apt-get install ubuntu-desktop
@@ -14,6 +14,7 @@ $ sudo apt-get install -y vim git build-essential
 $ sudo apt-get install python-dev
 $ sudo apt-get install nginx
 ```
+You should also install `gsutil` along with [this instuction](https://cloud.google.com/sdk/docs/quickstart-linux).
 
 ## pip installation
 ```
