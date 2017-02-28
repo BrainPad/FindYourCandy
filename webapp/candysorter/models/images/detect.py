@@ -38,6 +38,7 @@ class CandyDetector(object):
     def __init__(self,
                  histgram_band=(80, 200),
                  histgram_thres=2.7e-3,
+                 bin_thres=150,
                  edge3_thres=250,
                  edge5_thres=230,
                  margin=(20, 20),
@@ -52,6 +53,7 @@ class CandyDetector(object):
         self.histgram_band = histgram_band
         self.histgram_thres = histgram_thres
 
+        self.bin_thres = bin_thres
         self.edge3_thres = edge3_thres
         self.edge5_thres = edge5_thres
         self.margin = margin
@@ -70,8 +72,9 @@ class CandyDetector(object):
     def from_config(cls, config):
         return cls(histgram_band=config.CANDY_DETECTOR_HISTGRAM_BAND,
                    histgram_thres=config.CANDY_DETECTOR_HISTGRAM_THRES,
-                   edge3_thres=config.CANDY_DETECTOR_EDGE3_thres,
-                   edge5_thres=config.CANDY_DETECTOR_EDGE5_thres,
+                   bin_thres=config.CANDY_DETECTOR_BIN_THRES,
+                   edge3_thres=config.CANDY_DETECTOR_EDGE3_THRES,
+                   edge5_thres=config.CANDY_DETECTOR_EDGE5_THRES,
                    margin=config.CANDY_DETECTOR_MARGIN,
                    closing_iter=config.CANDY_DETECTOR_CLOSING_ITER,
                    opening_iter=config.CANDY_DETECTOR_OPENING_ITER,
@@ -92,7 +95,7 @@ class CandyDetector(object):
             return []
 
         # Binarize
-        _, binarized = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        _, binarized = cv2.threshold(img_gray, self.bin_thres, 255, cv2.THRESH_BINARY_INV)
 
         # Edge
         kernel_laplacian_3x3 = np.float32([
