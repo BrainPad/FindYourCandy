@@ -19,7 +19,7 @@ import json
 import logging
 import os
 
-import gensim
+from gensim.models import Word2Vec
 import numpy as np
 from scipy import spatial
 
@@ -34,32 +34,34 @@ class TextAnalyzer(object):
         'ja': 'ja',
     }
 
-    def __init__(self, params_file, model_file, pos_weights):
+    def __init__(self, params_file, model_files, pos_weights):
         self.params_file = params_file
-        self.model_file = model_file
+        self.model_files = model_files
         self.pos_weights = pos_weights
 
         self.labels = None
-        self.model = None
+        self.models = None
         self.language_client = language.Client()
 
     @classmethod
     def from_config(cls, config):
         return cls(params_file=os.path.join(config.CLASSIFIER_MODEL_DIR, 'params.json'),
-                   model_file=config.WORD2VEC_MODEL_FILE,
+                   model_files=config.WORD2VEC_MODEL_FILES,
                    pos_weights=config.POS_WEIGHTS)
 
     def init(self):
-        self._load_model()
+        self._load_models()
         self._load_labels()
 
     def reload(self):
         self._load_labels()
 
-    def _load_model(self):
-        logger.info('Loading word2vec model...')
-        self.model = gensim.models.Word2Vec.load_word2vec_format(self.model_file, binary=True)
-        logger.info('Finished loading word2vec model.')
+    def _load_models(self):
+        self.models = {}
+        for l, v in self.model_files.items():
+            logger.info('Loading %s word2vec model...', l)
+            self.models[l] = Word2Vec.load_word2vec_format(v['file'], binary=v['binary'])
+            logger.info('Finished %s loading word2vec model.', l)
 
     def _load_labels(self):
         logger.info('Loading labels...')
@@ -83,8 +85,7 @@ class TextAnalyzer(object):
         ])
 
     def _tokens_vector(self, tokens, lang):
-        # TODO: model from lang
-        model = self.model
+        model = self.models[lang]
 
         _tokens = [(t.lemma.lower(), t.pos.tag) for t in tokens]
         _tokens = [t for t in _tokens if t[0] in model]
@@ -102,8 +103,7 @@ class TextAnalyzer(object):
         return sum([model[w] for w, _ in _tokens]) / len(_tokens)
 
     def _label_vectors(self, lang):
-        # TODO: model from lang
-        model = self.model
+        model = self.models[lang]
 
         vectors = []
         for l in self.labels:
