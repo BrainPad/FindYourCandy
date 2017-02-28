@@ -29,14 +29,18 @@ export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
 ```
 
 ### word2vec
-- download word2vec model from https://github.com/mmihaltz/word2vec-GoogleNews-vectors
+- download word2vec model for English from https://github.com/mmihaltz/word2vec-GoogleNews-vectors
 - copy it to the 'models' directory
 ```
 $ mkdir -p ~/FindYourCandy/webapp/candysorter/resources/models
 ```
+- download word2vec model for Japanese from http://qiita.com/Hironsan/items/513b9f93752ecee9e670.
+And copy it to the same directory.
+
+(* If you don't need Japese model, just comment out the item of 'ja' within the declaration of WORD2VEC_MODEL_FILES list in [config.py](./candysorter/config.py). )
 
 ### inception-V3
-- download inception-v3 model from http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz
+- download inception-v3 model for Japanese from
 - copy it to the 'models' directory
 ```
 $ mkdir -p ~/FindYourCandy/webapp/candysorter/resources/models
