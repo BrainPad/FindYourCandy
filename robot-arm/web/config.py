@@ -15,7 +15,9 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import logging
 import os
+
 from calibration.converter import CoordinateConverter
 
 
@@ -26,6 +28,7 @@ class DefaultConfig(object):
     APP_ROOT = os.path.abspath(os.path.dirname(__file__))
 
     LOG_DIR = os.path.join(PROJECT_ROOT, 'logs')
+    LOG_LEVEL = logging.INFO
 
     DOBOT_SERIAL_PORT = None
     DOBOT_DEFAULT_BAUDRATE = 115200

@@ -15,6 +15,9 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import logging
+import logging.config
+
 import os
 
 from flask import Flask
@@ -29,5 +32,65 @@ def create_app(dobot_port, tuner_file):
     app = Flask(__name__)
 
     app.config.from_object(config)
+    _configure_logging(app, config)
     app.register_blueprint(api, url_prefix='/api')
     return app
+
+
+def _configure_logging(app, config):
+    app.logger
+    logging.config.dictConfig({
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'default': {
+                'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            },
+            'access': {
+                'format': '%(message)s',
+            },
+        },
+        'handlers': {
+            'console_app': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'default',
+            },
+            'console_access': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'access',
+            },
+            'file_app': {
+                'class': 'logging.handlers.TimedRotatingFileHandler',
+                'formatter': 'default',
+                'filename': os.path.join(config.LOG_DIR, 'app.log'),
+                'when': 'd',
+                'interval': 1,
+                'backupCount': 14,
+            },
+            'file_access': {
+                'class': 'logging.handlers.TimedRotatingFileHandler',
+                'formatter': 'access',
+                'filename': os.path.join(config.LOG_DIR, 'access.log'),
+                'when': 'd',
+                'interval': 1,
+                'backupCount': 14,
+            },
+
+        },
+        'loggers': {
+            '': {
+                'level': config.LOG_LEVEL,
+                'handlers': ['file_app'] if not app.debug else ['console_app'],
+                'propagate': False,
+            },
+            'werkzeug': {
+                'level': config.LOG_LEVEL,
+                'handlers': ['file_access'] if not app.debug else ['console_access'],
+                'propagate': False,
+            },
+        },
+        'root': {
+            'level': config.LOG_LEVEL,
+            'handlers': ['file_app'] if not app.debug else ['console_app'],
+        },
+    })
