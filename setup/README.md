@@ -20,7 +20,11 @@ Instruction
     - HDMI or mini HDMI cable is needed accordingly.
   - 2 x [8GB Memory](https://www.amazon.com/dp/B00CQ35HBQ))
   - [SSD 250GB](https://www.amazon.com/dp/B0194MV5U8)（One of Sandisk’s long life (5 yrs) series is strongly recommended for price and stability. not samsung or other.）
-- See [requirements.md](./requirements.md) for other components needed to demo.
+- Tablet UI
+  - Nexus9
+    - Microphone (internal or external)
+    - Chrome browser (to access linux box)
+- See [requirements.md](./requirements.md) for the full list.
 
 
 ### Step1 : Place hardware components and Marker sheet
