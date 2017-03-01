@@ -82,6 +82,14 @@ stroke-dashoffset: 0;
 .mode-thanks-end .thanks div:nth-child(2) { opacity: 1; transform: translate(0, 0); }
 .mode-thanks-btn .thanks div:nth-child(2) { opacity: 0; transform: translate(-100px, 0); }
 .mode-thanks-btn .thanks div:nth-child(3) { opacity: 1; transform: translate(0, 0); }
+/* sorry  */
+.sorry { height: 0; opacity: 0; }
+.mode-sorry-p .speech,
+.mode-sorry-p .nl,
+.mode-sorry-p .cam,
+.mode-sorry-p .plot,
+.mode-sorry-p .force { height: 0; opacity: 0; }
+.mode-sorry-p .sorry { height: 100%; opacity: 1; }
 /* loading */
 .loading { height: 0; opacity: 0; transition: opacity .3s; }
 .mode-loading .loading { height: 100%; opacity: 1; }
@@ -149,3 +157,8 @@ stroke-dashoffset: 0;
 .mode-stat .stat { height: 100%; opacity: 1; transform: translate(0, 0); }
 .stat-btn { height: 0; opacity: 0; transition: opacity .3s; }
 .mode-stat-end .stat-btn { height: 100%; opacity: 1; }
+/* sorry */
+.mode-sorry-t-start .loading,
+.mode-sorry-t-start .cap,
+.mode-sorry-t-start .train { height: 0; opacity: 0; }
+.mode-sorry-t-end .sorry { height: 100%; opacity: 1; }

@@ -52,7 +52,10 @@ $(function () {
 
 	// NL processing
 	var nl = function () {
-		$.ajax({
+		var morXHR = null;
+		var simXHR = null;
+
+		morXHR = $.ajax({
 			type: "POST",
 			contentType: "application/json",
 			dataType: "json",
@@ -62,8 +65,13 @@ $(function () {
 				"text": speechTxt,
 				"lang": lang
 			}),
-			error: function (textStatus) {
-				console.log(textStatus);
+			error: function (jqXHR, textStatus) {
+				if (textStatus == 'abort') { return; }
+				console.log(jqXHR);
+				if (simXHR !== null && simXHR.readyState > 0 && simXHR.readyState < 4) {
+					simAjax.abort();
+				}
+				sorry();
 			},
 			success: function (data) {
 				// generate morpheme
@@ -136,7 +144,7 @@ $(function () {
 			}
 		});
 		// retrieve inference data
-		$.ajax({
+		simXHR = $.ajax({
 			type: "POST",
 			contentType: "application/json",
 			dataType: "json",
@@ -146,8 +154,13 @@ $(function () {
 				"text": speechTxt,
 				"lang": lang
 			}),
-			error: function (textStatus) {
-				console.log(textStatus);
+			error: function (jqXHR, textStatus) {
+				if (textStatus == 'abort') { return; }
+				console.log(jqXHR);
+				if (morXHR !== null && morXHR.readyState > 0 && morXHR.readyState < 4) {
+					morXHR.abort();
+				}
+				sorry();
 			},
 			success: function (data) {
 				var sec = data.similarities.embedded.length >= simNoWaitNum ? 0 : simSec;
@@ -368,6 +381,11 @@ $(function () {
 		setTimeout(function () {
 			$("body").addClass("mode-thanks-btn");
 		}, 5000);
+	};
+
+	// draw sorry
+	var sorry = function () {
+		$("body").addClass("mode-sorry-p");
 	};
 
 	speech();
