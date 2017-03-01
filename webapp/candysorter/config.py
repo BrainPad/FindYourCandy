@@ -59,7 +59,7 @@ class DefaultConfig(object):
 
     POS_WEIGHTS = {
         language.PartOfSpeech.ADJECTIVE: 1.0,
-        language.PartOfSpeech.NOUN: 3.0,
+        language.PartOfSpeech.NOUN: 2.8,
     }
 
     CANDY_DETECTOR_HISTGRAM_BAND    = (0, 255)
