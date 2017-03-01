@@ -284,8 +284,12 @@ def _bounding_box_of(contour):
 
 def detect_labels(img):
     image = vision_client.image(content=cv2.imencode('.jpg', img)[1].tostring())
-    texts = image.detect_text()
-
+    try:
+        texts = image.detect_text()
+    except KeyError:
+        # workaround for error in client library when encountering unexpected response bodies
+        # https://github.com/GoogleCloudPlatform/google-cloud-python/issues/2930
+        return [' ']
     # e.g.
     # (image)
     #   Sweet
