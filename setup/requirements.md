@@ -1,8 +1,7 @@
 Requirements
 ===
 
-## Installation Requirements
-### Space requirement
+### Layouts
 
 ![](./image/table_layout.png)
 - Table Space: 500mm x 550mm (800mm x 800mm recommended)
@@ -11,28 +10,29 @@ Requirements
   - Nexus 9: [physical Spec of Nexus 9](http://www.htc.com/us/tablets/nexus-9/)
   - A3: The marker sheet should be printed in good quality and sticked to the center of table.
 
-### Lighting Requirement
+### Lighting
 - Environmental Lighting
   - Bright enough to detect markers.
   - No shadow over A3 paper.
 - LED light (optional)
-  - Dimmerable LED light: [MOSPRO Cordless Clip Desk Lamp] (https://www.amazon.com/dp/B0192XSVYM/)
+  - Dimmerable LED light: [MOSPRO Cordless Clip Desk Lamp](https://www.amazon.com/dp/B0192XSVYM/)   
 
-### Network and AC outlet requirements
+### Network and AC outlets
 ![](./image/networ_and_AC_outlet_layout.png)
 
-- 4 x AC Outlets for each robot (total 12 outlets)
+- 4 x AC Outlets for each robot
+ (if you have 3 robots, total is 12 outlets)
   - Robot Arm
-  - Document Camera
-  - Controller PC
+  - Controller PC(linux box)
   - Ethernet adapter for Nexus 9
-- 4 x AC Outlets for the large HDMI display
-  - HDMI Display
   - Ethernet hub
+- (Additional) 4 x AC Outlets for making demo better.
+  - HDMI Display (goes with chromecast)
   - Chromecast Ultra USB power
   - Ethernet adapter for Chromecast
-  - Network connection
-- 1 x wired Ethernet connection
+  - LED lighting
+- Network connections
   - DHCP server
-  - IP reachability between PC and robot
+  - IP reachability between linux box, Nexus9, and Chromecast
   - Internet access (to GCP, github, etc..)
+  

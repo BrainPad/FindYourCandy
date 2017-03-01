@@ -3,6 +3,8 @@ Instruction
 
 ### Space Requirement
 - More than 50cm x 55cm ( recommend 80cmｘ80cm )  space required.
+- See [requirements.md](./requirements.md) for layouts.
+
 
 ### Hardware Components
 - Robot Arm
@@ -18,6 +20,8 @@ Instruction
     - HDMI or mini HDMI cable is needed accordingly.
   - 2 x [8GB Memory](https://www.amazon.com/dp/B00CQ35HBQ))
   - [SSD 250GB](https://www.amazon.com/dp/B0194MV5U8)（One of Sandisk’s long life (5 yrs) series is strongly recommended for price and stability. not samsung or other.）
+- See [requirements.md](./requirements.md) for other components needed to demo.
+
 
 ### Step1 : Place hardware components and Marker sheet
 1. Print out [the marker sheet](./image/marker_paper.pdf) in A3 paper and stick it on the center
