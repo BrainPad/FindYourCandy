@@ -85,6 +85,10 @@ polygon.label-10 { stroke: #FFEE58; }
 .thanks { position: absolute; width: 100%; height: 100%; font-size: 48px; font-weight: 100; overflow: hidden; }
 .thanks div { display: flex; justify-content: center; align-items: center; position: absolute; width: 100%; height: 100%; }
 .thanks .btn { margin: 15px; }
+/* sorry */
+.sorry { position: absolute; width: 100%; height: 100%; font-size: 48px; font-weight: 100; overflow: hidden; }
+.sorry-inner { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; text-align: center; }
+.sorry-inner .btn { margin: 15px; }
 /* loading */
 .loading { display: flex; justify-content: center; align-items: center; position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.6); overflow: hidden; z-index: 100; }
 .spinner { width: 120px; }

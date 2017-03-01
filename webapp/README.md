@@ -34,10 +34,10 @@ export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
 ```
 $ mkdir -p ~/FindYourCandy/webapp/candysorter/resources/models
 ```
-- download word2vec model for Japanese from http://qiita.com/Hironsan/items/513b9f93752ecee9e670.
+- download word2vec model for Japanese from http://qiita.com/Hironsan/items/513b9f93752ecee9e670 .
 And copy it to the same directory.
 
-(* If you don't need Japese model, just comment out the item of 'ja' within the declaration of WORD2VEC_MODEL_FILES list in [config.py](./candysorter/config.py). )
+(* If you don't need Japanese model, just comment out the item of 'ja' within the declaration of WORD2VEC_MODEL_FILES list in [config.py](./candysorter/config.py). )
 
 ### inception-V3
 - download inception-v3 model for Japanese from

@@ -1,10 +1,12 @@
 Instruction
 =====
 
-### Space Requirement
+## Space Requirement
 - More than 50cm x 55cm ( recommend 80cmｘ80cm )  space required.
+- See [requirements.md](./requirements.md) for layouts.
 
-### Hardware Components
+
+## Hardware Components
 - Robot Arm
   - [Dobot Magician](http://dobot.cc/store/buy-dobot-magician.html)
 - Document camera
@@ -18,8 +20,14 @@ Instruction
     - HDMI or mini HDMI cable is needed accordingly.
   - 2 x [8GB Memory](https://www.amazon.com/dp/B00CQ35HBQ))
   - [SSD 250GB](https://www.amazon.com/dp/B0194MV5U8)（One of Sandisk’s long life (5 yrs) series is strongly recommended for price and stability. not samsung or other.）
+- Tablet UI
+  - Nexus9
+    - Microphone (internal or external)
+    - Chrome browser (to access linux box)
+- See [requirements.md](./requirements.md) for the full list.
 
-### Step1 : Place hardware components and Marker sheet
+
+## Step1 : Place hardware components and Marker sheet
 1. Print out [the marker sheet](./image/marker_paper.pdf) in A3 paper and stick it on the center
 (This sheet will be used during both setup and demo.)
 2. Build the robot arm by following manuals.
@@ -31,7 +39,7 @@ Note: Due to unavailability of 'CDVU-04IP-A1' in some regions including japan, a
 ![](./image/arrangement.png)
 ![](./image/robot_and_camera.png)
 
-### Step2 : Setup Linux box as controller PC.
+## Step2 : Setup Linux box as controller PC.
 - Build your linux box by following direction of each manufacture.
   - You might need to mount ssd and memory inside the linux box unless they are already built in.
 - Connect both the robot arm and the camera to linux box.
@@ -43,7 +51,7 @@ Note: Due to unavailability of 'CDVU-04IP-A1' in some regions including japan, a
   - Ubuntu 16.04.1 Server 64bit (You may also try Desktop 64bit, if your PC is well supported by Ubuntu.)
     - See [linux box.md](./linux_box.md)
 
-### Step3: Camera Calibation
+## Step3: Camera Calibation
 The following instructions illustrates how to adjust the camera position.
 
 1. Boot up linux box and login to the desktop.
@@ -55,7 +63,7 @@ The following instructions illustrates how to adjust the camera position.
 
 ![](./image/camera_calibration.png)
 
-### Step4: Robot Arm Caribration
+## Step4: Robot Arm Caribration
 (* Read the safety manuals of your Robot Arm , befor proceeding this section.)
 1. Execute [(cd script ; python2 robot_tune.py)](./script/robot_tune.py) to start tuning the coordinates of arm.
 2. Hit `Enter` key to initialize the robot arm.
@@ -67,17 +75,16 @@ The following instructions illustrates how to adjust the camera position.
 
 ![](./image/robot_calibration.png)
 
-### Step5: Tablet
+## Step5: Tablet
 1. Bootup Nexus9 and login with a google account for demo.
 2. Update firmware.
-3. Connect 'GL0402' (Ultra Adapter) to Nexus9’s OTG connector.
-(When you buy ChromeCast Ultra, it comes with one 'GL0402'. So you need extra ChromeCast Ultra to just get a 'GL0402' for Nexus9.)
+3. Connect the [Ethernet Adapter for Chromecast](https://store.google.com/product/ethernet_adapter_for_chromecast)('GL0402') to Nexus9’s OTG connector. This is a hack to provide power and ether connection through USB cable when wifi is not proper to use.
 4. Follow the “Set up Chromecast” on the [google support page](
 https://support.google.com/chromecast/answer/2998456?hl=en)
 \(there is instruction for Android 4.1 and higher\).
 (* If you have a trouble with voice recognition of Nexus9, consider for external microphone.)
 
-### Step6: Demo Application
+## Step6: Demo Application
 #### GCP for API service
 
 This demo is based on GCP. Create a credential associated to your project.

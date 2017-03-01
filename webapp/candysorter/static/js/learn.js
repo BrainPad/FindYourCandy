@@ -37,6 +37,7 @@ $(function () {
 			}),
 			error: function (textStatus) {
 				console.log(textStatus);
+				sorry();
 			},
 			success: function (data) {
 				// difference time for debug
@@ -68,6 +69,7 @@ $(function () {
 	});
 
 	// start learning
+  var trainStarted = false;
 	var train = function () {
 		$("body").addClass("mode-train");
 		// start request
@@ -81,9 +83,11 @@ $(function () {
 			}),
 			error: function (textStatus) {
 				console.log(textStatus);
+				clearInterval(statTimer);
+				sorry();
 			},
 			success: function (data) {
-				// processing
+        trainStarted = true;
 			}
 		});
 		// draw package images
@@ -122,6 +126,9 @@ $(function () {
 	var compFlg = false; // status
 	var statTimer = setInterval(function () {}, 100);
 	var statPost = function () {
+    if (!trainStarted) {
+      return;
+    }
 		if (compFlg) {
 			clearInterval(statTimer);
 		} else {
@@ -142,17 +149,21 @@ $(function () {
 				}),
 				error: function (textStatus) {
 					console.log(textStatus);
+					clearInterval(statTimer);
+					sorry();
 				},
 				success: function (data) {
 					if (data.status == "preparing") {
 						return;
 					}
 					if (data.status == "canceled") {
-						// TODO
+						compFlg = true;
+						sorry();
 						return;
 					}
 					if (data.status == "failed") {
-						// TODO
+						compFlg = true;
+						sorry();
 						return;
 					}
 					if (data.status == "running" || data.status == "complete") {
@@ -240,6 +251,14 @@ $(function () {
 			$("body").addClass("mode-plot-start");
 		}, 100);
 	};
-	cap();
 
+	// draw sorry
+	var sorry = function () {
+		$("body").addClass("mode-sorry-t-start");
+		setTimeout(function () {
+			$("body").addClass("mode-sorry-t-end");
+		}, 300);
+	};
+
+	cap();
 });
