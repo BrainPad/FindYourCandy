@@ -23,8 +23,10 @@ In the training mode, the system uses Inception model with transfer learning on 
 - Android tablet: shows UI for training process updates
 - Controller PC: runs Inception-v3 + transfer learning on Cloud ML to train a model from scratch, with the camera image
 
-## How to setup
-- Referer to [README.md](./setup/README.md) in the `setup` folder.
+## Setting things up
+- Prepare [hardware components](./setup/requirements.md)
+- Prepare [candies](./setup/candidate_candies.md)
+- Set up as directed by [setup/README.md](./setup/README.md)
 
 ## Note
 - Currently, the system is not using Cloud Speech API. It uses Web Speech API that shares the same voice recognition backend.
