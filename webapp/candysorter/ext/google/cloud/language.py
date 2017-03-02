@@ -17,8 +17,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from google.cloud import language
 
-DEFAULT_LANGUAGE = language.document.DEFAULT_LANGUAGE
-
 
 class Client(language.Client):
     def document_from_text(self, content, **kwargs):

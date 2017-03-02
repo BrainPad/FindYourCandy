@@ -22,4 +22,3 @@ class Connection(_http.JSONConnection):
     API_BASE_URL = 'https://ml.googleapis.com'
     API_VERSION = 'v1beta1'
     API_URL_TEMPLATE = '{api_base_url}/{api_version}{path}'
-    SCOPE = ('https://www.googleapis.com/auth/cloud-platform',)

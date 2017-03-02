@@ -15,15 +15,19 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from google.cloud.client import JSONClient
+from google.cloud.client import ClientWithProject
 from google.cloud.iterator import HTTPIterator
 
 from candysorter.ext.google.cloud.ml._http import Connection
 from candysorter.ext.google.cloud.ml.job import Job
 
 
-class Client(JSONClient):
-    _connection_class = Connection
+class Client(ClientWithProject):
+    SCOPE = ('https://www.googleapis.com/auth/cloud-platform',)
+
+    def __init__(self, project=None, credentials=None, http=None):
+        super(Client, self).__init__(project=project, credentials=credentials, http=http)
+        self._connection = Connection(self)
 
     def list_jobs(self, filter_=None, page_token=None, page_size=None):
         extra_params = {}
