@@ -39,6 +39,8 @@ $ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local -D OPENCV
 $ make -j7
 $ sudo make install
 ```
+Note: Compiling opencv from source may result in a different binary. If you are suspitous about your built, check `ldd /usr/local/lib/python2.7/dist-packages/cv2.so` and compare with [this one](./cv2_dependings.txt). This might give you a clue what library is missing before compiling.
+
 
 ## Permisions
 ```
