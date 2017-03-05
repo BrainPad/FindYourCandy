@@ -15,14 +15,21 @@ $ sudo apt-get install -y vim git build-essential
 $ sudo apt-get install python-dev
 $ sudo apt-get install nginx
 ```
+Check what installed for python
+```
+$ python -V
+Python 2.7.12
+```
+
 - Install gsutil
-You should also install `gsutil` along with [this instuction](https://cloud.google.com/sdk/docs/quickstart-linux).
-- Test gsutil from terminal
+
+ You should also install `gsutil` along with [this instuction](https://cloud.google.com/sdk/docs/quickstart-linux).
+- Check gsutil
 ```
 $ gsutil -v
 gsutil version: 4.22
 ```
-Also you can review what is already set.
+Also you can review what was already set.
 ```
 $ gcloud info
 ...
