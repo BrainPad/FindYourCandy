@@ -90,6 +90,8 @@ The following instructions illustrates how to adjust the camera position.
 
 ## Step4: Robot Arm Caribration
 (* Read the safety manuals of your Robot Arm , befor proceeding this section.)
+
+
 1. Execute [(cd script ; python2 robot_tune.py)](./script/robot_tune.py) to start tuning the coordinates of arm.
 2. Hit `Enter` key to initialize the robot arm.
 3. Push the `release` button (which has symbol of `unlock` ) while you holding the robot arm by the other hand. Please be aware when the button is pressed, the robot arm looses friction and will start falling instantly. To avoid damaging your robot or desk, you should always assist robot arm when you press the `release` button.
