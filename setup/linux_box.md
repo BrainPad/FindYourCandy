@@ -7,6 +7,7 @@ Linux Setup
 - Create user:  brainpad (group is also brainpad by default)
 
 ## Basic setup
+- Install packages
 ```
 $ sudo apt-get update && sudo apt-get upgrade -y && sudo reboot
 $ sudo apt-get install ubuntu-desktop
@@ -14,7 +15,34 @@ $ sudo apt-get install -y vim git build-essential
 $ sudo apt-get install python-dev
 $ sudo apt-get install nginx
 ```
+- Install gsutil
 You should also install `gsutil` along with [this instuction](https://cloud.google.com/sdk/docs/quickstart-linux).
+- Test gsutil from terminal
+```
+$ gsutil -v
+gsutil version: 4.22
+```
+Also you can review what is already set.
+```
+$ gcloud info
+...
+core: [2017.02.21]
+core-nix: [2017.02.21]
+gcloud-deps: [2017.02.21]
+gcloud: []
+gsutil-nix: [4.22]
+gcloud-deps-linux-x86_64: [2017.02.21]
+gsutil: [4.22]
+bq: [2.0.24]
+bq-nix: [2.0.24]
+...
+Cloud SDK on PATH: [True]
+...
+Account: [<your gcp account>]
+Project: [<your project>]
+...
+```
+
 
 ## pip installation
 ```
