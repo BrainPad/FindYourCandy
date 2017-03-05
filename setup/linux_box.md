@@ -56,7 +56,7 @@ Note: After you re-plugin usb or reboot the system, you need to repeat the above
 ## Install app
 ```
 $ cd ~
-$ git clone git@github.com:BrainPad/FindYourCandy.git
+$ git clone https://github.com/BrainPad/FindYourCandy.git
 $ cd ~/FindYourCandy
 $ sudo pip install -r robot-arm/requirements.txt
 $ sudo pip install -r webapp/requirements.txt
