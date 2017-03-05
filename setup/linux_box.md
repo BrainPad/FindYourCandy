@@ -66,9 +66,9 @@ $ sudo cp webapp.conf /etc/nginx/conf.d/
 $ sudo cp robot.conf /etc/nginx/conf.d/
 
 $ sudo mkdir /etc/uwsgi
-$ sudo cp webapp.ini /etc/uwsgi/
+$ sudo cp ./setup/nginx_config_example/webapp.ini /etc/uwsgi/
   (* You must edit webapp.ini and change the entry of GOOGLE_APPLICATION_CREDENTIALS later, after you create your credentials in following steps.)
-$ sudo cp robot.ini /etc/uwsgi/
+$ sudo cp ./setup/nginx_config_example/robot.ini /etc/uwsgi/
   (* You need to modify robot.ini according to your environment.)
 
 $ sudo mkdir -m 775 /var/run/uwsgi
