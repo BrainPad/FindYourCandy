@@ -9,6 +9,7 @@ Instruction
 ## Hardware Components
 - Robot Arm
   - [Dobot Magician](http://dobot.cc/store/buy-dobot-magician.html)
+  - Update to the latest firmware.
 - Document camera
   - [Ipevo Ziggi-HD](https://www.amazon.com/dp/B01530XGMA)
   - [Ipevo Height Extension Stand](https://www.amazon.com/dp/B00CTIF2O0)

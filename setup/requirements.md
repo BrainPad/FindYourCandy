@@ -17,7 +17,8 @@ Requirements
 
 - Robot arm : 1,159 USD
   - 1 x [Dobot Magician](http://dobot.cc/store/buy-dobot-magician.html) (Advance Education Plan)
-    - Please upgrade dobots
+    - Please update dobots by [DobotStudio](http://dobot.cc/download-center/dobot-magician.html)
+    - (* If you have trouble updating its firmware, please find a driver for its serial chip [ch340/ch341](https://www.google.co.jp/search?q=ch340+windows10) and install.)
 - Linux box: about 1,000 USD
   - 1 x [Intel NUC kit](https://www.amazon.com/dp/B01DG1SEES)
     - (This is where you install softwares.)
