@@ -14,7 +14,11 @@ $ sudo apt-get install -y vim git build-essential
 $ sudo apt-get install python-dev
 $ sudo apt-get install nginx
 ```
-You should also install `gsutil` along with [this instuction](https://cloud.google.com/sdk/docs/quickstart-linux).
+
+## Google Cloud SDK installation
+
+- Reboot the system so that it will show Ubuntu desktop
+- Follow [this instuction](https://cloud.google.com/sdk/docs/quickstart-linux) to install Google Cloud SDK. We will use `gsutil` command in the SDK
 
 ## pip installation
 ```
