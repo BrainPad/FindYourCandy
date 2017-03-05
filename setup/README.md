@@ -72,7 +72,7 @@ This demo requires API credential for Google Cloud Platform(GCP). If this is you
     - Key type: JSON
   - Save the JSON on ~/FindYourCandy/setup/script directory.
 5. Set env variable
-  - Add the following line (replace the path_to_your_own_credential_file with the actual JSON file path) to the last of `./.bashrc` file.  
+  - Add the following line (replace the path_to_your_own_credential_file with the actual JSON file path) to the last of `~/.bashrc` file.  
 
 ```
 export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
