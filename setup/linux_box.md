@@ -86,6 +86,19 @@ $ sudo chmod 777 /dev/video0
 ```
 Note: After you re-plugin usb or reboot the system, you need to repeat the above steps.
 
+
+If you want permanent permissions to the user, edit /etc/group to make it included in device's groups.
+Below is an example of user brainpad to grant the permissons. There is only two lines you need to edit.
+```
+...
+dialout:x:20:brainpad
+...
+video:x:44:brainpad
+...
+```
+Note: You have to be careful, otherwise the system will be damaged.
+
+
 ## Install app
 ```
 $ cd ~
@@ -111,9 +124,9 @@ $ sudo cp ./setup/nginx_config_example/webapp.ini /etc/uwsgi/
 $ sudo cp ./setup/nginx_config_example/robot.ini /etc/uwsgi/
   (* You need to modify robot.ini according to your environment.)
 
-$ sudo mkdir -m 775 /var/run/uwsgi
+$ sudo mkdir -m 777 /var/run/uwsgi
 $ sudo chown brainpad:brainpad /var/run/uwsgi
-$ sudo mkdir -m 775 /var/log/uwsgi
+$ sudo mkdir -m 777 /var/log/uwsgi
 $ sudo chown brainpad:brainpad /var/log/uwsgi
 
 $ sudo cp ./setup/nginx_config_example/uwsgi-webapp.service /etc/systemd/system/
