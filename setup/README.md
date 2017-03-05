@@ -14,6 +14,9 @@ Instruction
   - [Ipevo Height Extension Stand](https://www.amazon.com/dp/B00CTIF2O0)
 - [A3 marker sheet](./image/marker_paper.pdf)
   - for camera and robot arm to adjust their position
+- Labeling tag
+  - [Post-it 75 x 25mm](https://www.amazon.com/dp/B0013MW3PO/)
+  - Yellow ones are easier to make good contrast with your pen color.
 - Linux Box
   - [Intel NUC kit](https://www.amazon.com/dp/B01DG1SEES)
     - Core-i3 or i5 (included in Intel NUC kit)
@@ -25,6 +28,7 @@ Instruction
     - Microphone (internal or external)
     - Chrome browser (to access linux box)
 - See [requirements.md](./requirements.md) for the full list.
+
 
 
 ## Step1 : Place hardware components and Marker sheet
@@ -40,16 +44,37 @@ Note: Due to unavailability of 'CDVU-04IP-A1' in some regions including japan, a
 ![](./image/robot_and_camera.png)
 
 ## Step2 : Setup Linux box as controller PC.
-- Build your linux box by following direction of each manufacture.
+1. Build your linux box by following direction of each manufacture.
   - You might need to mount ssd and memory inside the linux box unless they are already built in.
-- Connect both the robot arm and the camera to linux box.
+2. Connect both the robot arm and the camera to linux box.
   - The suction cup should be attached on arm end.
   - In some cases, we experienced the robot's firmware beeing outdated. In such a case, DobotStudio is required to upgrade its firmware(See manuals).
-- Connect the linux box to the internet using LAN cable.
-- During setup you need  a LCD display, a keyboard and a mouse. please prepare.
-- Install linux and softwares
+3. Connect the linux box to the internet using LAN cable.
+4. During setup you need  a LCD display, a keyboard and a mouse. please prepare.
+5. Install linux and softwares
   - Ubuntu 16.04.1 Server 64bit (You may also try Desktop 64bit, if your PC is well supported by Ubuntu.)
     - See [linux box.md](./linux_box.md)
+
+
+#### Getting API credential.
+
+This demo requires API credential for Google Cloud Platform(GCP). If this is your first project to use GCP, you can get an account from [cloud.google.com](https://cloud.google.com/).
+
+1. Create a new GCP project
+2. Enable the following APIs
+  - Vision API (see also: https://cloud.google.com/vision/docs/quickstart)
+  - Natural Language API (see also: https://cloud.google.com/natural-language/docs/getting-started)
+  - CloudML API (see also: https://cloud.google.com/ml/docs/how-tos/getting-set-up)
+3. Create a service account key file
+4. See [this doc](https://cloud.google.com/vision/docs/common/auth#set_up_a_service_account) to create a service account key
+    - Service account: Compute Engine default service account
+    - Key type: JSON
+  - Save the JSON on ~/FindYourCandy/setup/script directory.
+5. Execute the following command (replace the path_to_your_own_credential_file with the actual JSON file path).
+
+```
+$ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
+```
 
 ## Step3: Camera Calibation
 The following instructions illustrates how to adjust the camera position.
@@ -85,17 +110,7 @@ https://support.google.com/chromecast/answer/2998456?hl=en)
 (* If you have a trouble with voice recognition of Nexus9, consider for external microphone.)
 
 ## Step6: Demo Application
-#### GCP for API service
 
-This demo is based on GCP. Create a credential associated to your project.
-Please enable follwoing services and set up API credential.
-- Vision API (see also: https://cloud.google.com/vision/docs/quickstart)
-- Natural Language API (see also: https://cloud.google.com/natural-language/docs/getting-started)
-- CloudML API (see also: https://cloud.google.com/ml/docs/how-tos/getting-set-up)
-
-```
-$ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
-```
 #### Configure and run demo
   - See [README.md](../robot-arm) for robot-arm
   - See [README.md](../webapp) for webapp
