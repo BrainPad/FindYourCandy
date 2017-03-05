@@ -63,18 +63,22 @@ This demo requires API credential for Google Cloud Platform(GCP). If this is you
 1. Create a new GCP project
 2. Enable the following APIs
   - Vision API (see also: https://cloud.google.com/vision/docs/quickstart)
+  - Speech API (see also: https://cloud.google.com/speech/docs/getting-started)
   - Natural Language API (see also: https://cloud.google.com/natural-language/docs/getting-started)
-  - CloudML API (see also: https://cloud.google.com/ml/docs/how-tos/getting-set-up)
+  - Cloud ML API (see also: https://cloud.google.com/ml/docs/how-tos/getting-set-up)
 3. Create a service account key file
 4. See [this doc](https://cloud.google.com/vision/docs/common/auth#set_up_a_service_account) to create a service account key
     - Service account: Compute Engine default service account
     - Key type: JSON
   - Save the JSON on ~/FindYourCandy/setup/script directory.
-5. Execute the following command (replace the path_to_your_own_credential_file with the actual JSON file path).
+5. Set env variable
+  - Add the following line (replace the path_to_your_own_credential_file with the actual JSON file path) to the last of `./.bashrc` file.  
 
 ```
-$ export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
+export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
 ```
+
+  - Reopen the shell to set the env variable
 
 ## Step3: Camera Calibation
 The following instructions illustrates how to adjust the camera position.
