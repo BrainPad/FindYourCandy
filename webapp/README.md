@@ -68,6 +68,8 @@ CLOUD_ML_DATA_DIR      = 'gs://{YOUR-OWN-BUCKET-NAME}/{job_id}/features'
 
 #### build and upload package to GCS
 - execute shell for build and upload package
+- reopen your terminal
+
 ```
 # replace {YOUR-OWN-BUCKET-NAME} to your own bukcet name
 $ cd ~/FindYourCandy/train
