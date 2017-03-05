@@ -96,7 +96,8 @@ The following instructions illustrates how to adjust the camera position.
 4. Slowly land the arm edge to the center of `Maker A`. (still pressing the button.)
 5. Hit `Enter` key.
 6. Repeat above 3,4 and 5 for Marker D and E.
-7. The program ends automatically.
+7. The program saves those coordinates and ends automatically.
+8. (You can see there are 3 lines of jsonl in `/tmp/robot_tuner.dat`.)
 
 ![](./image/robot_calibration.png)
 
