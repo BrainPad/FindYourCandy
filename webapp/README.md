@@ -30,6 +30,7 @@ export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
 
 ### word2vec
 - download word2vec model for English from https://github.com/mmihaltz/word2vec-GoogleNews-vectors
+  - (* you need to follow the link below to get from the [MIRROR](https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing). Be careful you cannot downlod it from git.)
 - copy it to the 'models' directory
 ```
 $ mkdir -p ~/FindYourCandy/webapp/candysorter/resources/models
