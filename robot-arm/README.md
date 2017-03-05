@@ -6,17 +6,7 @@ robot-arm (api)
 This software is design to work with Python2.7 under following condition.
 - This software depends on the following libraries:
  - OpenCV3.2 (need to be compiled from source.)
-  - Refer to [installation_instructions.md](../setup/installation_instructions.md) for installation.
- - Softwares you need to install from pip
- ```
-  $ pip install -r requirements.txt
- ```
-  ex)
-  - Flask
-  - uWSGI
-  - numpy
-  - pyserial
-
+  - Refer to [setup/README.md](../setup/README.md) for installation.
 - Environment variables
     ```
     export FLASK_ENV='prd'   # choices are 'prd', 'stg' or 'dev'
