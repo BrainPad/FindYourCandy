@@ -112,12 +112,30 @@ Demo is not working
 1. Just wait for 3 minutes.(It takes a little while until all the data is loaded at begining .)
 2. If it is still not working and cpu is not busy, just restart.
    ```
+   sudo systemctl stop nginx.service
    sudo systemctl restart uwsgi-robot.service
+   sudo systemctl start nginx.service
    ```
 
 
 #### Error 502 on browser
 - uWSGI may be not working.
+  ```
+  sudo systemctl start uwsgi-webapp.service
+  ```
+  If it still does not work, check for the permission of /var/run/uwsgi.
 
 
-1. sudo systemctl start uwsgi-webapp.service
+- uWSGIi(webapp) is stuck in the middle of `systemctl` command
+
+  Please do the following thing
+  ```
+  chmod 777 /var/log/uwsgi   # just make sure
+  sudo systemctl stop nginx.service
+  sudo systemctl stop uwsgi-webapp.service
+  sudo kill -9 <the process # of `/usr/local/bin/uwsgi --ini /etc uwsgi/webapp.ini`>
+  sudo rm /var/run/uwsgi/webapp.*
+  ```
+  Wait for a while, and then start uwsgi.
+
+  I'm not sure but may be it's safer to stop nginx before rebooting any uWSGI service.
