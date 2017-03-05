@@ -41,12 +41,13 @@ And copy it to the same directory.
 (* If you don't need Japanese model, just comment out the item of 'ja' within the declaration of WORD2VEC_MODEL_FILES list in [config.py](./candysorter/config.py). )
 
 ### inception-V3
-- download inception-v3 model for Japanese from
+- download [inception-v3 model](http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz)
 - copy it to the 'models' directory
 ```
 $ mkdir -p ~/FindYourCandy/webapp/candysorter/resources/models
 $ cd ~/FindYourCandy/webapp/candysorter/resources/models
-$ tar xvzf inception-2015-12-05.tgz classify_image_graph_def.pb
+$ wget http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz
+$ tar xvzf inception-2015-12-05.tgz
 ```
 
 ### CloudML
@@ -67,9 +68,12 @@ CLOUD_ML_DATA_DIR      = 'gs://{YOUR-OWN-BUCKET-NAME}/{job_id}/features'
 
 #### build and upload package to GCS
 - execute shell for build and upload package
+- reopen your terminal
+
 ```
 # replace {YOUR-OWN-BUCKET-NAME} to your own bukcet name
-$ bash ~/FindYourCandy/train/build_package.sh gs://{YOUR-OWN-BUCKET-NAME}/package
+$ cd ~/FindYourCandy/train
+$ bash build_package.sh gs://{YOUR-OWN-BUCKET-NAME}/package
 ```
 
 ### Configuration files
