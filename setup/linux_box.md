@@ -14,11 +14,7 @@ $ sudo apt-get install -y vim git build-essential
 $ sudo apt-get install python-dev
 $ sudo apt-get install nginx
 ```
-
-## Google Cloud SDK installation
-
-- Reboot the system so that it will show Ubuntu desktop
-- Follow [this instuction](https://cloud.google.com/sdk/docs/quickstart-linux) to install Google Cloud SDK. We will use `gsutil` command in the SDK
+You should also install `gsutil` along with [this instuction](https://cloud.google.com/sdk/docs/quickstart-linux).
 
 ## pip installation
 ```
@@ -80,6 +76,6 @@ $ sudo chown brainpad:brainpad /var/run/uwsgi
 $ sudo mkdir -m 775 /var/log/uwsgi
 $ sudo chown brainpad:brainpad /var/log/uwsgi
 
-$ sudo cp uwsgi-webapp.service /etc/systemd/system/
-$ sudo cp uwsgi-robot.service /etc/systemd/system/
+$ sudo cp ./setup/nginx_config_example/uwsgi-webapp.service /etc/systemd/system/
+$ sudo cp ./setup/nginx_config_example/uwsgi-robot.service /etc/systemd/system/
 ```
