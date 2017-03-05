@@ -66,8 +66,8 @@ $ sudo pip install -r webapp/requirements.txt
 This is not mandatory, but this setup senario is based on nginx.
 If you don't install, you have to figure out how to setup by yourself.
 ```
-$ sudo cp webapp.conf /etc/nginx/conf.d/
-$ sudo cp robot.conf /etc/nginx/conf.d/
+$ sudo cp ./setup/nginx_config_example/webapp.conf /etc/nginx/conf.d/
+$ sudo cp ./setup/nginx_config_example/robot.conf /etc/nginx/conf.d/
 
 $ sudo mkdir /etc/uwsgi
 $ sudo cp webapp.ini /etc/uwsgi/
