@@ -71,15 +71,15 @@ This demo requires API credential for Google Cloud Platform(GCP). If this is you
 4. See [this doc](https://cloud.google.com/vision/docs/common/auth#set_up_a_service_account) to create a service account key
     - Service account: Compute Engine default service account
     - Key type: JSON
-  - Save the JSON on ~/FindYourCandy/setup/script directory.
+      - Save the JSON as /home/brainpad/FindYourCandy/credential.json
 5. Set env variable
   - Add the following line (replace the path_to_your_own_credential_file with the actual JSON file path) to the last of `~/.bashrc` file.  
 
-```
-export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
-```
+  ```
+  export GOOGLE_APPLICATION_CREDENTIALS="path_to_your_own_credential_file"
+  ```
 
-  - Reopen the shell to set the env variable
+6. Reopen the shell so that it takes effect
 
 ## Step3: Camera Calibation
 The following instructions illustrates how to adjust the camera position.
@@ -105,7 +105,7 @@ The following instructions illustrates how to adjust the camera position.
 2. Execute [(cd script ; python2 robot_tune.py)](./script/robot_tune.py) to start tuning the coordinates of arm.
 3. Hit `Enter` key to initialize the robot arm.
 4. Push the `release` button (which has symbol of `unlock` ) while you holding the robot arm by the other hand. Please be aware when the button is pressed, the robot arm looses friction and will start falling instantly. To avoid damaging your robot or desk, you should always assist robot arm when you press the `release` button.
-5. Slowly land the arm edge to the center of `Maker A`. (still pressing the button.)
+5. Slowly land the arm edge to the center of `Maker A`. (still pressing the button.) Not on the letter 'A' but the target sign printed by the letter
 6. Hit `Enter` key.
 7. Repeat above 3,4 and 5 for Marker D and E.
 8. The program saves those coordinates and ends automatically.
