@@ -78,25 +78,25 @@ Note: Compiling opencv from source may result in a different binary. If you are 
 
 
 ## Permisions
+
+#### Permanent change
+In order to keep the robot and camera accessible after reboot, you need to add user `brainpad` to group `dialout` and group `video`.
+```
+sudo sed "s/^dialout:x:20:$/dialout:x:20:brainpad/g" -i /etc/group
+sudo sed "s/^video:x:44:$/video:x:44:brainpad/g" -i /etc/group
+```
+Note: You have to be careful, otherwise the system will be damaged. Please use `chmod` if you cannot take the risk or don't know what you are doing.
+
+
+#### Temporary change
+If you prefer `chmod` mothod, you need to run the following commands. After you re-plugin usb or reboot the system, you need to repeat these steps.
 ```
 $ sudo chmod 777 /dev/ttyUSB0
-  (* You may have the robot at /dev/ttyUSB1 instead of /dev/ttyUSB0, depending on your hardware. ;-)
+  (* You may have the robot at /dev/ttyUSB1 instead of /dev/ttyUSB0, depending on your hardware.)
 $ sudo chmod 777 /dev/video0
   (* If you have two or more web cameras, it may be /dev/video1 or else. )
 ```
-Note: After you re-plugin usb or reboot the system, you need to repeat the above steps.
 
-
-If you want permanent permissions to the user, edit /etc/group to make it included in device's groups.
-Below is an example of user brainpad to grant the permissons. There is only two lines you need to edit.
-```
-...
-dialout:x:20:brainpad
-...
-video:x:44:brainpad
-...
-```
-Note: You have to be careful, otherwise the system will be damaged.
 
 
 ## Install app
