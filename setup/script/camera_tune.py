@@ -41,8 +41,8 @@ def mouse_event(event, x, y, flags, param):
         should_exit = True
 
 
-def write_message(image, msg):
-    cv2.putText(image, msg, (10, 130), font, 3, (250, 30, 30), 3)
+def write_message(image, msg, size=3, thickness=3):
+    cv2.putText(image, msg, (10, 130), font, size, (250, 30, 30), thickness)
 
 
 def write_ok(image):
@@ -90,13 +90,13 @@ while True:
             break
         corners = detect_corners(frame)
         if corners is not None:
-            write_ok(frame)
             cropped = calibrator.calibrate(frame)
             draw_detection(cropped)
             cv2.imshow('Detection', cropped)
+            write_ok(frame)
         else:
             blank = np.zeros((w2_size[1], w2_size[0], 3), np.uint8)
-            write_message(blank, 'Marker detection failed')
+            write_message(blank, 'Marker detection failed', size=1, thickness=1)
             cv2.imshow('Detection', blank)
 
         write_message(frame, 'Click L-button of mouse to exit')
