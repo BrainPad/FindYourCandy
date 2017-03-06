@@ -72,6 +72,7 @@ This demo requires API credential for Google Cloud Platform(GCP). If this is you
     - Service account: Compute Engine default service account
     - Key type: JSON
       - Save the JSON as /home/brainpad/FindYourCandy/credential.json
+      - (* Saving to different path or filename may require editing webapp.ini later)
 5. Set env variable
   - Add the following line (replace the path_to_your_own_credential_file with the actual JSON file path) to the last of `~/.bashrc` file.  
 
