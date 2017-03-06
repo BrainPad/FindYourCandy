@@ -1,6 +1,3 @@
-## Notice
-This project is still in under construction. We plan to release it in early March.
-
 ![](./setup/image/demo_overview.png)
 "Find Your Candy with Cloud ML" system diagram
 
