@@ -96,7 +96,7 @@ while True:
             cv2.imshow('Detection', cropped)
         else:
             blank = np.zeros((w2_size[1], w2_size[0], 3), np.uint8)
-            write_message(frame, 'Marker detection failed.')
+            write_message(blank, 'Marker detection failed')
             cv2.imshow('Detection', blank)
 
         write_message(frame, 'Click L-button of mouse to exit')
