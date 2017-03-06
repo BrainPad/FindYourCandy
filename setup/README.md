@@ -62,11 +62,12 @@ Note: Due to unavailability of 'CDVU-04IP-A1' in some regions including japan, a
 This demo requires API credential for Google Cloud Platform(GCP). If this is your first project to use GCP, you can get an account from [cloud.google.com](https://cloud.google.com/).
 
 1. Create a new GCP project
-2. Enable the following APIs
-  - Vision API (see also: https://cloud.google.com/vision/docs/quickstart)
-  - Speech API (see also: https://cloud.google.com/speech/docs/getting-started)
-  - Natural Language API (see also: https://cloud.google.com/natural-language/docs/getting-started)
-  - Cloud ML API (see also: https://cloud.google.com/ml/docs/how-tos/getting-set-up)
+2. Enable the following APIs and services on [API Manager](https://support.google.com/cloud/answer/6158841)
+  - Google Cloud Storage and Google Cloud Storage JSON API
+  - Vision API
+  - Speech API
+  - Natural Language API
+  - Cloud ML API
 3. Create a service account key file
 4. See [this doc](https://cloud.google.com/vision/docs/common/auth#set_up_a_service_account) to create a service account key
     - Service account: Compute Engine default service account
