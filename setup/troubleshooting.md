@@ -11,10 +11,12 @@ Camera troubles
 
 
 1. Change the permision of device file.
- ```
- sudo chmod 777 /dev/video0
- ```
-2. Rerun camera_tune.py .
+   ```
+   sudo chmod 777 /dev/video0
+   ```
+   Note: This is only needed when you didn't do the permanent permission setting (see [linux_box.md](./linux_box.md) ).
+2. Rerun camera_tune.py
+
 
 #### How can I control focus or exposure of camera.
 1. Turn the robot arm to the opposite, so that the camera won't see in sight.
@@ -29,7 +31,7 @@ Camera troubles
 
 If you login to the linux box via ssh, this likely happens.
 1. You first login to the desktop.
-2. Then run 'camera_tune.py' after run.
+2. Then run 'camera_tune.py' from terminal window.
 
 
 
@@ -59,6 +61,7 @@ Robot troubles
    ```
    sudo chmod 777 /dev/ttyUSB0
    ```
+   Note: This is only needed when you didn't do the permanent permission setting (see [linux_box.md](./linux_box.md) ).
 2. Run robot_tune.py again.
 
 
@@ -104,18 +107,19 @@ Demo is not working
 #### Error 504 on browser
 - Until all models are loaded to webapp, all requests will be timed out with error 504 .
 - The following is a list of all models loading during startup of webapp.
-   - word2vec models (this is very large model and takes about 3to4 minutes to load.)
+   - word2vec models (these are very large models)
    - inception model
    - transfer model
 
    (* You can see the progress that has been made in webapp/log/app.log .)
 
 
-1. Just wait for 3 minutes.(It takes a little while until all the data is loaded at begining .)
-2. If it is still not working and cpu is not busy, just restart.
+1. If you just started uwsgi/nginx, wait for 3-4 minutes.(It takes a little while until all the data is loaded at begining .)
+2. If it is still not working and cpu is not busy, try these commands in terminal.
    ```
    sudo systemctl stop nginx.service
    sudo systemctl restart uwsgi-robot.service
+   # wait for 4 minutes and then
    sudo systemctl start nginx.service
    ```
 
@@ -123,7 +127,9 @@ Demo is not working
 #### Error 502 on browser
 - uWSGI may be not working.
   ```
-  sudo systemctl start uwsgi-webapp.service
+  sudo systemctl stop nginx.service
+  sudo systemctl restart uwsgi-robot.service
+  sudo systemctl start nginx.service
   ```
   If it still does not work, check for the permission of /var/run/uwsgi.
 
