@@ -97,14 +97,25 @@ The following instructions illustrates how to adjust the camera position.
 (* Read the safety manuals of your Robot Arm , befor proceeding this section.)
 
 
-1. Execute [(cd script ; python2 robot_tune.py)](./script/robot_tune.py) to start tuning the coordinates of arm.
-2. Hit `Enter` key to initialize the robot arm.
-3. Push the `release` button (which has symbol of `unlock` ) while you holding the robot arm by the other hand. Please be aware when the button is pressed, the robot arm looses friction and will start falling instantly. To avoid damaging your robot or desk, you should always assist robot arm when you press the `release` button.
-4. Slowly land the arm edge to the center of `Maker A`. (still pressing the button.)
-5. Hit `Enter` key.
-6. Repeat above 3,4 and 5 for Marker D and E.
-7. The program saves those coordinates and ends automatically.
-8. (You can see there are 3 lines of jsonl in `/tmp/robot_tuner.dat`.)
+1. Start uwsgi-robot
+  ```
+  sudo systemctl stop  nginx.service # just make sure
+  sudo systemctl start uwsgi-robot.service
+  ```
+2. Execute [(cd script ; python2 robot_tune.py)](./script/robot_tune.py) to start tuning the coordinates of arm.
+3. Hit `Enter` key to initialize the robot arm.
+4. Push the `release` button (which has symbol of `unlock` ) while you holding the robot arm by the other hand. Please be aware when the button is pressed, the robot arm looses friction and will start falling instantly. To avoid damaging your robot or desk, you should always assist robot arm when you press the `release` button.
+5. Slowly land the arm edge to the center of `Maker A`. (still pressing the button.)
+6. Hit `Enter` key.
+7. Repeat above 3,4 and 5 for Marker D and E.
+8. The program saves those coordinates and ends automatically.
+9. (You can see there are 3 lines of jsonl in `/tmp/robot_tuner.dat`.)
+10. Restart to reload `/tmp/robot_tuner.dat`.
+  ```
+  sudo systemctl stop  nginx.service # just make sure
+  sudo systemctl restart uwsgi-robot.service
+  sudo systemctl start  nginx.service # finally nginx starts here
+  ```
 
 ![](./image/robot_calibration.png)
 

@@ -87,12 +87,14 @@ Robot troubles
    ```
    sudo chmod 777 /dev/ttyUSB0
    ```
-8. Run the robot_tune.py.
-9. Restart the robot-arm's uWSGI to reload fixed cordinates.
+   Note: This is only needed when you didn't do the permanent permission setting (see [linux_box.md](./linux_box.md) ).
+8. Restart the robot-arm's uWSGI to reload fixed cordinates.
    ```
-   sudo systemctl start uwsgi-robot.service
+   sudo systemctl stop nginx.service
+   sudo systemctl restart uwsgi-robot.service
+   sudo systemctl start nginx.service
    ```
-
+9. Run the robot_tune.py.
 
 
 
