@@ -139,6 +139,7 @@ Demo is not working
   Please do the following thing
   ```
   chmod 777 /var/log/uwsgi   # just make sure
+  chmod 777 /var/run/uwsgi   # just make sure
   sudo systemctl stop nginx.service
   sudo systemctl stop uwsgi-webapp.service
   sudo kill -9 <the process # of `/usr/local/bin/uwsgi --ini /etc uwsgi/webapp.ini`>
