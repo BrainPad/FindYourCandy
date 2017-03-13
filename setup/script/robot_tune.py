@@ -84,7 +84,7 @@ if '__main__' == __name__:
     parser.add_argument('--http', dest='http', action='store_true', default=False)
     parser.add_argument('--api-uri', type=str, default="127.0.0.1:8000")
     parser.add_argument('--dobot-port', type=str, default=None)
-    parser.add_argument('--tuner-file', type=str, default='/tmp/robot_tuner.dat')
+    parser.add_argument('--tuner-file', type=str, default='/var/tmp/robot_tuner.dat')
 
     args = parser.parse_args()
 
@@ -129,7 +129,7 @@ if '__main__' == __name__:
     val_arr.append(value)
 
     print ""
-    with open('/tmp/robot_tuner.dat', 'w') as writefile:
+    with open(args.tuner_file, 'w') as writefile:
         for entry in val_arr:
             json.dump(entry, writefile)
             writefile.write('\n')

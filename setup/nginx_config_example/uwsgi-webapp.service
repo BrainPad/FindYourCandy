@@ -1,9 +1,14 @@
 [Unit]
 Description=uWSGI service for webapp
-After=syslog.target
+After=syslog.target dev-video0.device
+Wants=dev-video0.device
 
 [Service]
-ExecStartPre=/bin/mkdir -p -m 775 /var/run/uwsgi
+ExecStartPre=/bin/chmod 777 /dev/video0
+ExecStartPre=/bin/mkdir -p -m 777 /var/run/uwsgi
+ExecStartPre=/bin/chown brainpad:brainpad /var/run/uwsgi
+ExecStartPre=/bin/mkdir -p -m 777 /var/log/uwsgi
+ExecStartPre=/bin/chown brainpad:brainpad /var/log/uwsgi
 ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/webapp.ini
 RuntimeDirectory=/var/run/uwsgi
 Restart=always
@@ -11,7 +16,6 @@ KillSignal=SIGTERM
 StandardError=syslog
 Type=forking
 NotifyAccess=all
-TimeoutSec=infinity
 
 [Install]
 WantedBy=multi-user.target

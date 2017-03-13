@@ -50,7 +50,7 @@ class CoordinateConverter(object):
         return transformed[0], transformed[1]
 
     @classmethod
-    def from_tuning_file(cls, file_='/tmp/robot_tuner.dat', z_low_pad=5):
+    def from_tuning_file(cls, file_, z_low_pad=5):
         tuner_data = []
         with open(file_, 'r') as readfile:
             for line in readfile:

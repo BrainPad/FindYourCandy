@@ -61,11 +61,11 @@ _ENV_TO_CONFIG = {
 Config = None
 
 
-def get_config(env, dobot_port):
+def get_config(env, dobot_port, tuner_file):
     global Config
     Config = _ENV_TO_CONFIG[env]()
 
     Config.DOBOT_SERIAL_PORT = dobot_port
-    Config.DOBOT_COORDINATE_CONVERTER = CoordinateConverter.from_tuning_file()
+    Config.DOBOT_COORDINATE_CONVERTER = CoordinateConverter.from_tuning_file(tuner_file)
 
     return Config

@@ -26,7 +26,7 @@ parser = argparse.ArgumentParser(description='Run Dobot WebAPI.')
 parser.add_argument('--port', type=int, default=18001)
 parser.add_argument('--host', type=str, default='0.0.0.0')
 parser.add_argument('--dobot-port', type=str, default=None)
-parser.add_argument('--tuner-file', type=str, default='/tmp/robot_tuner.dat')
+parser.add_argument('--tuner-file', type=str, default='/var/tmp/robot_tuner.dat')
 
 args = parser.parse_args()
 

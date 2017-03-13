@@ -1,9 +1,14 @@
 [Unit]
 Description=uWSGI service for robot
-After=syslog.target
+After=syslog.target dev-ttyUSB0.device
+Requires=dev-ttyUSB0.device
 
 [Service]
-ExecStartPre=/bin/mkdir -p -m 775 /var/run/uwsgi
+ExecStartPre=/bin/chmod 777 /dev/ttyUSB0
+ExecStartPre=/bin/mkdir -p -m 777 /var/run/uwsgi
+ExecStartPre=/bin/chown brainpad:brainpad /var/run/uwsgi
+ExecStartPre=/bin/mkdir -p -m 777 /var/log/uwsgi
+ExecStartPre=/bin/chown brainpad:brainpad /var/log/uwsgi
 ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/robot.ini
 RuntimeDirectory=/var/run/uwsgi
 Restart=always
