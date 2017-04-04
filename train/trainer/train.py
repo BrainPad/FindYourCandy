@@ -119,8 +119,8 @@ class Trainer(object):
 
         loss_log = []
         with tf.Session() as sess:
-            summary_writer = tf.train.SummaryWriter(self.log_dir, graph=sess.graph)
-            sess.run(tf.initialize_all_variables())
+            summary_writer = tf.summary.FileWriter(self.log_dir, graph=sess.graph)
+            sess.run(tf.global_variables_initializer())
 
             for epoch in range(self.train_config.epochs):
                 # Shuffle data for batching

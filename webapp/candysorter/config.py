@@ -96,6 +96,7 @@ class DefaultConfig(object):
     CLOUD_ML_TRAIN_DIR     = 'gs://{YOUR-OWN-BUCKET-NAME}/{job_id}/checkpoints'
     CLOUD_ML_LOG_DIR       = 'gs://{YOUR-OWN-BUCKET-NAME}/logs/{job_id}'
     CLOUD_ML_DATA_DIR      = 'gs://{YOUR-OWN-BUCKET-NAME}/{job_id}/features'
+    CLOUD_ML_RUNTIME_VERSION = '1.0'
 
 
 class DevelopmentConfig(DefaultConfig):

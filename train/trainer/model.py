@@ -85,7 +85,7 @@ class TransferModel(object):
             # add loss operation if initializing for training
             one_hot = tf.one_hot(self.label_ids, num_classes, name='target')
             self.loss_op = tf.reduce_mean(
-                tf.nn.softmax_cross_entropy_with_logits(logits, one_hot)
+                tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot)
             )
 
         self.softmax_op = tf.nn.softmax(logits)
@@ -98,8 +98,8 @@ class TransferModel(object):
                 self.global_step = tf.Variable(0, name='global_step', trainable=False)
             # Summaries
             with tf.variable_scope('summaries'):
-                tf.scalar_summary('in sample loss', self.loss_op)
-                self.summary_op = tf.merge_all_summaries()
+                tf.summary.scalar('in_sample_loss', self.loss_op)
+                self.summary_op = tf.summary.merge_all()
 
     @classmethod
     def from_model_params(cls, model_params):
