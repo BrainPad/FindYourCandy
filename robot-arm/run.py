@@ -27,6 +27,7 @@ parser.add_argument('--port', type=int, default=18001)
 parser.add_argument('--host', type=str, default='0.0.0.0')
 parser.add_argument('--dobot-port', type=str, default=None)
 parser.add_argument('--tuner-file', type=str, default='/var/tmp/robot_tuner.dat')
+parser.add_argument('--instance_path', type=str, default=None)
 
 args = parser.parse_args()
 
@@ -41,7 +42,7 @@ else:
         print('dobot is not detected on port {}'.format(dobot_port))
         exit(1)
 
-app = create_app(dobot_port, args.tuner_file)
+app = create_app(dobot_port, args.tuner_file, args.instance_path)
 
 if __name__ == '__main__':
     app.run(port=args.port, host=args.host)

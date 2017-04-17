@@ -1,0 +1,13 @@
+[Unit]
+Description=Find Your Candy
+Requires=docker.service dev-videoziggi.device dev-ttydobot.device
+After=docker.service dev-videoziggi.device dev-ttydobot.device
+
+[Service]
+WorkingDirectory={{fyc_home}}
+ExecStart=/usr/local/bin/docker-compose up
+ExecStop=/usr/local/bin/docker-compose down
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

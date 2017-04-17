@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+fyc_home={{fyc_home}}
+
+cd ${fyc_home} && docker-compose stop webapp
+cd ${fyc_home} && docker-compose rm -f webapp

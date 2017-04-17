@@ -36,11 +36,11 @@ class CandyClassifier(object):
 
     @classmethod
     def from_config(cls, config):
-        checkpoint_dir = config.CLASSIFIER_MODEL_DIR
+        checkpoint_dir = config['CLASSIFIER_MODEL_DIR']
         return cls(
             checkpoint_dir=checkpoint_dir,
             params_file=os.path.join(checkpoint_dir, 'params.json'),
-            inception_model_file=config.INCEPTION_MODEL_FILE
+            inception_model_file=config['INCEPTION_MODEL_FILE']
         )
 
     def init(self):

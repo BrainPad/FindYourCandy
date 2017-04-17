@@ -1,0 +1,10 @@
+.git
+
+**/credentials.json
+**/robot_tuner.dat
+**/GoogleNews-vectors-negative300.bin.gz
+**/model.vec
+**/classify_image_graph_def.pb
+**/classifier_candy_sorter*
+**/logs/*
+**/tmp

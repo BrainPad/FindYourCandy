@@ -1,0 +1,43 @@
+# Copyright 2017 BrainPad Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+import os
+
+_data_dir = '/opt/FindYourCandy/data'
+
+DOWNLOAD_IMAGE_DIR = os.path.join(_data_dir, 'images')
+MODEL_DIR          = os.path.join(_data_dir, 'models')
+
+WORD2VEC_MODEL_FILES = {
+    'en': {
+        'file': os.path.join(MODEL_DIR, 'GoogleNews-vectors-negative300.bin.gz'),
+        'binary': True,
+    },
+    'ja': {
+        'file': os.path.join(MODEL_DIR, 'model.vec'),
+        'binary': False,
+    },
+}
+INCEPTION_MODEL_FILE = os.path.join(MODEL_DIR, 'classify_image_graph_def.pb')
+
+PICKUP_ENDOPOINT = 'http://robot/api/pickup'
+
+CLOUD_ML_BUCKET       = 'gs://{{cloud_ml_bucket}}'
+CLOUD_ML_PACKAGE_URIS = ['gs://{{cloud_ml_bucket}}/package/trainer-0.0.0.tar.gz']
+CLOUD_ML_TRAIN_DIR    = 'gs://{{cloud_ml_bucket}}/{job_id}/checkpoints'
+CLOUD_ML_LOG_DIR      = 'gs://{{cloud_ml_bucket}}/logs/{job_id}'
+CLOUD_ML_DATA_DIR     = 'gs://{{cloud_ml_bucket}}/{job_id}/features'

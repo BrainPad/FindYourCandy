@@ -1,0 +1,7 @@
+[servers]
+192.168.33.10
+
+[servers:vars]
+user=some_user
+fyc_home=/home/some_user/FindYourCandy
+cloud_ml_bucket=your_own_bucket_name

@@ -1,0 +1,39 @@
+#!/bin/sh
+set -eu
+
+fyc_home={{fyc_home}}
+
+usage() {
+  echo "Usage: `basename $0` [-d camera_device]"
+}
+
+while getopts :d:h opt; do
+  case $opt in
+    d)
+      camera_device=$OPTARG
+      ;;
+    h)
+      usage;
+      exit 0
+      ;;
+    \?)
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+: ${camera_device:=/dev/videoziggi}
+
+xhost +local:root
+docker run -it --rm \
+  -v ${fyc_home}/data:/opt/FindYourCandy/data \
+  -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+  --device "${camera_device}:/dev/video0" \
+  --name fyc-camera-tune \
+  --ipc host \
+  -e DISPLAY \
+  -e FLASK_ENV=prd \
+  -e GOOGLE_APPLICATION_CREDENTIALS=/opt/FindYourCandy/data/credentials.json \
+  brainpad/fyc-webapp \
+  /bin/bash -c 'cd /opt/FindYourCandy/setup/script && /usr/bin/python camera_tune.py'

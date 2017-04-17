@@ -36,8 +36,8 @@ class ImageCalibrator(object):
 
     @classmethod
     def from_config(cls, config):
-        return cls(area=config.IMAGE_CALIBRATOR_AREA,
-                   scale=config.IMAGE_CALIBRATOR_SCALE)
+        return cls(area=config['IMAGE_CALIBRATOR_AREA'],
+                   scale=config['IMAGE_CALIBRATOR_SCALE'])
 
     def calibrate(self, img):
         corners = self.detect_corners(img)

@@ -25,13 +25,11 @@ from flask import Flask, g, jsonify
 from candysorter.config import get_config
 
 
-def create_app():
-    config = get_config(os.getenv('FLASK_ENV', 'dev'))
+def create_app(instance_path):
+    app = Flask('candysorter', instance_path=instance_path, instance_relative_config=True)
 
-    app = Flask('candysorter')
-
-    _configure_app(app, config)
-    _configure_logging(app, config)
+    _configure_app(app)
+    _configure_logging(app)
     _configure_blueprints(app)
     _configure_errorhandlers(app)
     _configure_hooks(app)
@@ -39,9 +37,10 @@ def create_app():
     return app
 
 
-def _configure_app(app, config):
+def _configure_app(app):
     sys.path.append(os.path.join(os.path.dirname(__file__), '../../train'))
-    app.config.from_object(config)
+    app.config.from_object(get_config(os.getenv('FLASK_ENV', 'dev')))
+    app.config.from_pyfile('config.py', silent=True)
 
 
 def _configure_blueprints(app):
@@ -52,7 +51,7 @@ def _configure_blueprints(app):
     app.register_blueprint(ui)
 
 
-def _configure_logging(app, config):
+def _configure_logging(app):
     app.logger
     logging.config.dictConfig({
         'version': 1,
@@ -77,7 +76,7 @@ def _configure_logging(app, config):
             'file_app': {
                 'class': 'logging.handlers.TimedRotatingFileHandler',
                 'formatter': 'default',
-                'filename': os.path.join(config.LOG_DIR, 'app.log'),
+                'filename': os.path.join(app.config['LOG_DIR'], 'app.log'),
                 'when': 'd',
                 'interval': 1,
                 'backupCount': 14,
@@ -85,16 +84,15 @@ def _configure_logging(app, config):
             'file_access': {
                 'class': 'logging.handlers.TimedRotatingFileHandler',
                 'formatter': 'access',
-                'filename': os.path.join(config.LOG_DIR, 'access.log'),
+                'filename': os.path.join(app.config['LOG_DIR'], 'access.log'),
                 'when': 'd',
                 'interval': 1,
                 'backupCount': 14,
             },
-
         },
         'loggers': {
             'candysorter': {
-                'level': config.LOG_LEVEL,
+                'level': app.config['LOG_LEVEL'],
                 'handlers': ['file_app'] if not app.debug else ['console_app'],
                 'propagate': False,
             },
@@ -104,20 +102,19 @@ def _configure_logging(app, config):
                 'propagate': False,
             },
             'werkzeug': {
-                'level': config.LOG_LEVEL,
+                'level': app.config['LOG_LEVEL'],
                 'handlers': ['file_access'] if not app.debug else ['console_access'],
                 'propagate': False,
             },
         },
         'root': {
-            'level': config.LOG_LEVEL,
+            'level': app.config['LOG_LEVEL'],
             'handlers': ['file_app'] if not app.debug else ['console_app'],
         },
     })
 
 
 def _configure_errorhandlers(app):
-
     @app.errorhandler(404)
     @app.errorhandler(405)
     def handle_error(e):
@@ -126,7 +123,6 @@ def _configure_errorhandlers(app):
 
 
 def _configure_hooks(app):
-
     @app.after_request
     def call_after_request_callbacks(response):
         for callback in getattr(g, 'after_request_callbacks', ()):

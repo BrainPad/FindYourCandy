@@ -70,20 +70,20 @@ class CandyDetector(object):
 
     @classmethod
     def from_config(cls, config):
-        return cls(histgram_band=config.CANDY_DETECTOR_HISTGRAM_BAND,
-                   histgram_thres=config.CANDY_DETECTOR_HISTGRAM_THRES,
-                   bin_thres=config.CANDY_DETECTOR_BIN_THRES,
-                   edge3_thres=config.CANDY_DETECTOR_EDGE3_THRES,
-                   edge5_thres=config.CANDY_DETECTOR_EDGE5_THRES,
-                   margin=config.CANDY_DETECTOR_MARGIN,
-                   closing_iter=config.CANDY_DETECTOR_CLOSING_ITER,
-                   opening_iter=config.CANDY_DETECTOR_OPENING_ITER,
-                   erode_iter=config.CANDY_DETECTOR_ERODE_ITER,
-                   dilate_iter=config.CANDY_DETECTOR_DILATE_ITER,
-                   bg_size_filter=config.CANDY_DETECTOR_BG_SIZE_FILTER,
-                   sure_fg_thres=config.CANDY_DETECTOR_SURE_FG_THRES,
-                   restore_fg_thres=config.CANDY_DETECTOR_RESTORE_FG_THRES,
-                   box_dim_thres=config.CANDY_DETECTOR_BOX_DIM_THRES)
+        return cls(histgram_band=config['CANDY_DETECTOR_HISTGRAM_BAND'],
+                   histgram_thres=config['CANDY_DETECTOR_HISTGRAM_THRES'],
+                   bin_thres=config['CANDY_DETECTOR_BIN_THRES'],
+                   edge3_thres=config['CANDY_DETECTOR_EDGE3_THRES'],
+                   edge5_thres=config['CANDY_DETECTOR_EDGE5_THRES'],
+                   margin=config['CANDY_DETECTOR_MARGIN'],
+                   closing_iter=config['CANDY_DETECTOR_CLOSING_ITER'],
+                   opening_iter=config['CANDY_DETECTOR_OPENING_ITER'],
+                   erode_iter=config['CANDY_DETECTOR_ERODE_ITER'],
+                   dilate_iter=config['CANDY_DETECTOR_DILATE_ITER'],
+                   bg_size_filter=config['CANDY_DETECTOR_BG_SIZE_FILTER'],
+                   sure_fg_thres=config['CANDY_DETECTOR_SURE_FG_THRES'],
+                   restore_fg_thres=config['CANDY_DETECTOR_RESTORE_FG_THRES'],
+                   box_dim_thres=config['CANDY_DETECTOR_BOX_DIM_THRES'])
 
     def detect(self, img):
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

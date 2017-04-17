@@ -2,7 +2,7 @@ Linux Setup
 ===
 
 ## OS installation
-- Ubuntu 16.04.1 LTS Server   
+- Ubuntu 16.04.1 LTS Server
 - Choose “standard system utilities” and “OpenSSH server” as software selection
 - Create user:  brainpad (group is also brainpad by default)
 

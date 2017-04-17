@@ -1,0 +1,86 @@
+- name: Add user to docker group
+  user: name={{user}} groups=docker append=yes
+
+- name: Create directories
+  file:
+    path: "{{fyc_home}}/{{item}}"
+    state: directory
+    owner: "{{user}}"
+    group: "{{user}}"
+  with_items:
+    - bin
+    - config/robot
+    - config/webapp
+    - data/models
+    - data/images
+
+- name: Copy scripts
+  template:
+    src: "bin/{{item}}.j2"
+    dest: "{{fyc_home}}/bin/{{item}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0755
+  with_items:
+    - restart_all.sh
+    - restart_robot.sh
+    - restart_webapp.sh
+    - start_all.sh
+    - start_robot.sh
+    - start_webapp.sh
+    - stop_all.sh
+    - stop_robot.sh
+    - stop_webapp.sh
+    - tail_logs.sh
+    - tune_camera.sh
+    - tune_robot.sh
+
+- name: Copy config files
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0644
+  with_items:
+    - {src: "config-robot.py.j2",  dest: "{{fyc_home}}/config/robot/config.py"}
+    - {src: "config-webapp.py.j2", dest: "{{fyc_home}}/config/webapp/config.py"}
+
+- name: Copy other files
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0644
+  with_items:
+    - {src: "docker-compose.yaml",                          dest: "{{fyc_home}}/"}
+    - {src: "credentials.json",                             dest: "{{fyc_home}}/data/"}
+    - {src: "models/classify_image_graph_def.pb",           dest: "{{fyc_home}}/data/models/"}
+    - {src: "models/GoogleNews-vectors-negative300.bin.gz", dest: "{{fyc_home}}/data/models/"}
+    - {src: "models/model.vec",                             dest: "{{fyc_home}}/data/models/"}
+
+- name: Copy udev rules
+  copy:
+    src: "udev/{{item}}"
+    dest: /etc/udev/rules.d/
+    owner: root
+    group: root
+  with_items:
+    - 90-camera.rules
+    - 90-dobot.rules
+
+- name: Copy service file
+  template:
+    src: fyc.service.j2
+    dest: /etc/systemd/system/fyc.service
+    owner: root
+    group: root
+
+- name: Enable fyc service
+  systemd: name=fyc enabled=yes
+
+- name: Download images
+  shell: docker-compose pull
+  args:
+    chdir: "{{fyc_home}}"

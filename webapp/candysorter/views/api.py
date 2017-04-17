@@ -33,7 +33,6 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 
 from candysorter.cache import Cache
-from candysorter.config import Config
 from candysorter.ext.google.cloud.ml import State
 from candysorter.models.images.calibrate import ImageCalibrator
 from candysorter.models.images.classify import CandyClassifier
@@ -45,6 +44,7 @@ from candysorter.utils import load_class, random_str, symlink_force
 logger = logging.getLogger(__name__)
 
 api = Blueprint('api', __name__, url_prefix='/api')
+config = None
 cache = Cache()
 
 text_analyzer = None
@@ -57,25 +57,28 @@ image_calibrator = None
 
 @api.record
 def record(state):
+    global config
+    config = state.app.config
+
     global text_analyzer
-    text_analyzer = load_class(Config.CLASS_TEXT_ANALYZER).from_config(Config)
+    text_analyzer = load_class(config['CLASS_TEXT_ANALYZER']).from_config(config)
     text_analyzer.init()
 
     global candy_detector
-    candy_detector = CandyDetector.from_config(Config)
+    candy_detector = CandyDetector.from_config(config)
 
     global candy_classifier
-    candy_classifier = CandyClassifier.from_config(Config)
+    candy_classifier = CandyClassifier.from_config(config)
     candy_classifier.init()
 
     global candy_trainer
-    candy_trainer = CandyTrainer.from_config(Config)
+    candy_trainer = CandyTrainer.from_config(config)
 
     global image_capture
-    image_capture = load_class(Config.CLASS_IMAGE_CAPTURE).from_config(Config)
+    image_capture = load_class(config['CLASS_IMAGE_CAPTURE']).from_config(config)
 
     global image_calibrator
-    image_calibrator = ImageCalibrator.from_config(Config)
+    image_calibrator = ImageCalibrator.from_config(config)
 
 
 @api.errorhandler(400)
@@ -100,6 +103,7 @@ def id_required(f):
             abort(400)
         g.id = id_
         return f(*args, **kwargs)
+
     return wrapper
 
 
@@ -115,12 +119,12 @@ def morphs():
 
     tokens = text_analyzer.analyze_syntax(text, lang)
     return jsonify(morphs=[
-        dict(word=t.text.content,
-             depend=dict(label=t.dep.label, index=[
-                 _i for _i, _t in enumerate(tokens)
-                 if _i != i and _t.dep.index == i
-             ]),
-             pos=dict(tag=t.pos.tag, case=t.pos.case, number=t.pos.number))
+        dict(
+            word=t.text.content,
+            depend=dict(
+                label=t.dep.label,
+                index=[_i for _i, _t in enumerate(tokens) if _i != i and _t.dep.index == i]),
+            pos=dict(tag=t.pos.tag, case=t.pos.case, number=t.pos.number))
         for i, t in enumerate(tokens)
     ])
 
@@ -198,8 +202,10 @@ def similarities():
 
     # For json
     def _sim_as_json(sim):
-        return [dict(label=l, lid=i + 1, em=np.asscalar(s))
-                for i, (l, s) in enumerate(zip(labels, sim))]
+        return [
+            dict(label=l, lid=i + 1, em=np.asscalar(s))
+            for i, (l, s) in enumerate(zip(labels, sim))
+        ]
 
     def _coords_as_json(rsim):
         return list(rsim)
@@ -211,17 +217,18 @@ def similarities():
         force=_sim_as_json(speech_sim),
         url=snapshot_url,
         embedded=[
-            dict(url=url,
-                 similarities=_sim_as_json(sim),
-                 coords=_coords_as_json(rsim),
-                 box=_box_as_json(candy.box_coords))
+            dict(
+                url=url,
+                similarities=_sim_as_json(sim),
+                coords=_coords_as_json(rsim),
+                box=_box_as_json(candy.box_coords))
             for candy, sim, rsim, url in zip(candies, candy_sims, candy_rsims, candy_urls)
         ],
-        nearest=dict(url=candy_urls[nearest_idx],
-                     similarities=_sim_as_json(candy_sims[nearest_idx]),
-                     coords=_coords_as_json(candy_rsims[nearest_idx]),
-                     box=_box_as_json(candies[nearest_idx].box_coords)),
-    ))
+        nearest=dict(
+            url=candy_urls[nearest_idx],
+            similarities=_sim_as_json(candy_sims[nearest_idx]),
+            coords=_coords_as_json(candy_rsims[nearest_idx]),
+            box=_box_as_json(candies[nearest_idx].box_coords)), ))
 
 
 @api.route('/pickup', methods=['POST'])
@@ -234,7 +241,7 @@ def pickup():
     logger.info('=== Pickup candy: id=%s ===', g.id)
 
     logger.info('Picking candy. x=%f, y=%f', pickup_point[0], pickup_point[1])
-    requests.post(Config.PICKUP_ENDOPOINT, json=dict(x=pickup_point[0], y=pickup_point[1]))
+    requests.post(config['PICKUP_ENDOPOINT'], json=dict(x=pickup_point[0], y=pickup_point[1]))
     return jsonify()
 
 
@@ -283,8 +290,8 @@ def capture():
 
     # Crop label and candies
     logger.info('Cropping image.')
-    img_label = img[:Config.TRAIN_LABEL_AREA_HEIGHT]
-    img_candies = img[Config.TRAIN_LABEL_AREA_HEIGHT:]
+    img_label = img[:config['TRAIN_LABEL_AREA_HEIGHT']]
+    img_candies = img[config['TRAIN_LABEL_AREA_HEIGHT']:]
 
     # Save snapshot image
     logger.info('Saving snapshot image.')
@@ -386,7 +393,7 @@ def status():
         if not cache.get(key):
             logger.info('Training completed, updating model: job_id=%s', job_id)
             new_checkpoint_dir = candy_trainer.download_checkpoints(job_id)
-            symlink_force(os.path.basename(new_checkpoint_dir), Config.CLASSIFIER_MODEL_DIR)
+            symlink_force(new_checkpoint_dir, config['CLASSIFIER_MODEL_DIR'])
             text_analyzer.reload()
             candy_classifier.reload()
             cache.set(key, True)
@@ -408,8 +415,8 @@ def reload():
 
 @api.route('/_reset', methods=['POST'])
 def reset():
-    symlink_force(os.path.basename(Config.CLASSIFIER_MODEL_DIR_INITIAL),
-                  Config.CLASSIFIER_MODEL_DIR)
+    symlink_force(
+        os.path.basename(config['CLASSIFIER_MODEL_DIR_INITIAL']), config['CLASSIFIER_MODEL_DIR'])
     text_analyzer.reload()
     candy_classifier.reload()
     return jsonify({})
@@ -434,7 +441,7 @@ def _capture_image(retry_count=5, retry_interval=0.1):
 
 def _create_save_dir(session_id):
     # e.g. 20170209_130952_reqid -> /tmp/download/image/20170209_130952_reqid/
-    d = os.path.join(Config.DOWNLOAD_IMAGE_DIR, session_id)
+    d = os.path.join(config['DOWNLOAD_IMAGE_DIR'], session_id)
     os.makedirs(d)
     return d
 
@@ -442,14 +449,12 @@ def _create_save_dir(session_id):
 def _candy_file(save_dir, i):
     # e.g. /tmp/download/image/20170209_130952_reqid/candy_01_xxxxxxxx.png
     return os.path.join(
-        save_dir,
-        'candy_{:02d}_{}.jpg'.format(i, random_str(8, string.lowercase + string.digits))
-    )
+        save_dir, 'candy_{:02d}_{}.jpg'.format(i, random_str(8, string.lowercase + string.digits)))
 
 
 def _image_url(image_file):
     # e.g. 20170209_130952_reqid/candy_01_xxxxxxxx.png
-    rel = os.path.relpath(image_file, Config.DOWNLOAD_IMAGE_DIR)
+    rel = os.path.relpath(image_file, config['DOWNLOAD_IMAGE_DIR'])
 
     # e.g. /image/20170209_130952_reqid/candy_01_xxxxxxxx.png
     return url_for('ui.image', filename=rel)

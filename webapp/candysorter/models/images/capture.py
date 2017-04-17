@@ -29,10 +29,10 @@ class ImageCapture(object):
 
     @classmethod
     def from_config(cls, config):
-        return cls(device=config.IMAGE_CAPTURE_DEVICE,
-                   width=config.IMAGE_CAPTURE_WIDTH,
-                   height=config.IMAGE_CAPTURE_HEIGHT,
-                   blur_thres=config.IMAGE_CAPTURE_BLUR_THRESH)
+        return cls(device=config['IMAGE_CAPTURE_DEVICE'],
+                   width=config['IMAGE_CAPTURE_WIDTH'],
+                   height=config['IMAGE_CAPTURE_HEIGHT'],
+                   blur_thres=config['IMAGE_CAPTURE_BLUR_THRESH'])
 
     def capture(self):
         capture = cv2.VideoCapture(self.device)
@@ -64,7 +64,7 @@ class FakeImageCapture(object):
 
     @classmethod
     def from_config(cls, config):
-        return cls(img_file=config.DUMMY_IMAGE_FILE)
+        return cls(img_file=config['DUMMY_IMAGE_FILE'])
 
     def capture(self):
         return cv2.imread(self.img_file)

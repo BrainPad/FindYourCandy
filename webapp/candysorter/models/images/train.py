@@ -47,14 +47,14 @@ class CandyTrainer(object):
 
     @classmethod
     def from_config(cls, config):
-        return cls(feature_extractor=FeatureExtractor(config.INCEPTION_MODEL_FILE),
-                   package_uris=config.CLOUD_ML_PACKAGE_URIS,
-                   python_module=config.CLOUD_ML_PYTHON_MODULE,
-                   data_dir_format=config.CLOUD_ML_DATA_DIR,
-                   train_dir_format=config.CLOUD_ML_TRAIN_DIR,
-                   log_dir_format=config.CLOUD_ML_LOG_DIR,
-                   local_model_dir=config.MODEL_DIR,
-                   local_classifier_model_dir=config.CLASSIFIER_MODEL_DIR)
+        return cls(feature_extractor=FeatureExtractor(config['INCEPTION_MODEL_FILE']),
+                   package_uris=config['CLOUD_ML_PACKAGE_URIS'],
+                   python_module=config['CLOUD_ML_PYTHON_MODULE'],
+                   data_dir_format=config['CLOUD_ML_DATA_DIR'],
+                   train_dir_format=config['CLOUD_ML_TRAIN_DIR'],
+                   log_dir_format=config['CLOUD_ML_LOG_DIR'],
+                   local_model_dir=config['MODEL_DIR'],
+                   local_classifier_model_dir=config['CLASSIFIER_MODEL_DIR'])
 
     def data_dir(self, job_id):
         return self.data_dir_format.format(job_id=job_id)

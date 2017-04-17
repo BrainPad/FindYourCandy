@@ -21,11 +21,17 @@ import os
 import cv2
 from flask import Blueprint, current_app, send_file, send_from_directory
 
-from candysorter.config import Config
 from candysorter.decorators import after_this_request
 from candysorter.utils import load_class
 
 ui = Blueprint('ui', __name__)
+config = None
+
+
+@ui.record
+def record(state):
+    global config
+    config = state.app.config
 
 
 @ui.route('/predict')
@@ -40,12 +46,12 @@ def learn():
 
 @ui.route('/image/<path:filename>')
 def image(filename):
-    return send_from_directory(Config.DOWNLOAD_IMAGE_DIR, filename)
+    return send_from_directory(config['DOWNLOAD_IMAGE_DIR'], filename)
 
 
 @ui.route('/_capture')
 def capture():
-    tmp_dir = os.path.join(Config.DOWNLOAD_IMAGE_DIR, 'tmp')
+    tmp_dir = os.path.join(config['DOWNLOAD_IMAGE_DIR'], 'tmp')
     if not os.path.exists(tmp_dir):
         os.makedirs(tmp_dir)
     tmp_file = os.path.join(tmp_dir, '{}.jpg'.format(datetime.now().strftime('%Y%m%d_%H%M%S')))
@@ -54,7 +60,7 @@ def capture():
     def remove_tmp_file(response):
         os.remove(tmp_file)
 
-    image_capture = load_class(Config.CLASS_IMAGE_CAPTURE).from_config(Config)
+    image_capture = load_class(config['CLASS_IMAGE_CAPTURE']).from_config(config)
     img = image_capture.capture()
 
     cv2.imwrite(tmp_file, img)

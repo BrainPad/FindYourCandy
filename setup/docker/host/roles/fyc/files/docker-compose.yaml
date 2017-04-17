@@ -1,0 +1,20 @@
+version: '2'
+services:
+  webapp:
+    image: brainpad/fyc-webapp
+    devices:
+      - "/dev/videoziggi:/dev/video0"
+    ports:
+      - "18000:80"
+    volumes:
+      - ./config/webapp:/opt/FindYourCandy/config
+      - ./data:/opt/FindYourCandy/data
+  robot:
+    image: brainpad/fyc-robot
+    devices:
+      - "/dev/ttydobot:/dev/ttyUSB0"
+    ports:
+      - "18001:80"
+    volumes:
+      - ./config/robot:/opt/FindYourCandy/config
+      - ./data:/opt/FindYourCandy/data

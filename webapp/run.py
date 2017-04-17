@@ -22,9 +22,10 @@ from candysorter import create_app
 parser = argparse.ArgumentParser(description='CandySorter WebApp')
 parser.add_argument('--host', type=str, default='0.0.0.0')
 parser.add_argument('--port', type=int, default=18000)
+parser.add_argument('--instance_path', type=str, default=None)
 args = parser.parse_args()
 
-app = create_app()
+app = create_app(args.instance_path)
 
 if __name__ == '__main__':
     app.run(host=args.host, port=args.port)

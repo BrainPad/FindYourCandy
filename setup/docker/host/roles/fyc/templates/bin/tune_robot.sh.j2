@@ -1,0 +1,33 @@
+#!/bin/sh
+set -eu
+
+fyc_home={{fyc_home}}
+
+usage() {
+  echo "Usage: `basename $0` [-d dobot_device]"
+}
+
+while getopts :d:h opt; do
+  case $opt in
+    d)
+      dobot_device=$OPTARG
+      ;;
+    h)
+      usage;
+      exit 0
+      ;;
+    \?)
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+: ${dobot_device:=/dev/ttydobot}
+
+docker run -it --rm \
+  -v ${fyc_home}/data:/opt/FindYourCandy/data \
+  --device "${dobot_device}:/dev/ttyUSB0" \
+  --name fyc-robot-tune \
+  brainpad/fyc-robot \
+  /bin/bash -c 'cd /opt/FindYourCandy/setup/script && /usr/bin/python robot_tune.py --tuner-file /opt/FindYourCandy/data/robot_tuner.dat'

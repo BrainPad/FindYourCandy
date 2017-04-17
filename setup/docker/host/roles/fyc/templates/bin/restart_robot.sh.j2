@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+
+cwd=$(dirname $0)
+cd $cwd
+
+./stop_robot.sh
+./start_robot.sh

@@ -45,9 +45,9 @@ class TextAnalyzer(object):
 
     @classmethod
     def from_config(cls, config):
-        return cls(params_file=os.path.join(config.CLASSIFIER_MODEL_DIR, 'params.json'),
-                   model_files=config.WORD2VEC_MODEL_FILES,
-                   pos_weights=config.POS_WEIGHTS)
+        return cls(params_file=os.path.join(config['CLASSIFIER_MODEL_DIR'], 'params.json'),
+                   model_files=config['WORD2VEC_MODEL_FILES'],
+                   pos_weights=config['POS_WEIGHTS'])
 
     def init(self):
         self._load_models()

@@ -1,0 +1,1 @@
+SUBSYSTEMS=="video4linux", KERNEL=="video*", ATTRS{name}=="IPEVO Ziggi-HD Plus", MODE="0777", SYMLINK+="videoziggi", TAG+="systemd"
