@@ -8,7 +8,7 @@ $(function () {
 	var simSec = 5000; // delay time
 	var simNoWaitNum = 5;
 	var plotSec = 5000; // display time of scatter plot(milisec）
-	var camSec = 3000; // display tiem of camera image(milisec)
+	var camSec = 7000; // display tiem of camera image(milisec)
 
 	// variables
 	var recognition = new webkitSpeechRecognition();
@@ -350,26 +350,26 @@ $(function () {
 		// draw with time difference
 		setTimeout(function () {
 			$("body").addClass("mode-cam-start");
+			// operation of pickup
+			$.ajax({
+				type: "POST",
+				contentType: "application/json",
+				dataType: "json",
+				url: pickUrl,
+				data: JSON.stringify({
+					"id": pid
+				}),
+				error: function (textStatus) {
+					console.log(textStatus);
+				},
+				success: function (data) {
+					sim = data;
+				}
+			});
 		}, 2000);
 		setTimeout(function () {
 			thanks();
 		}, camSec);
-		// operation of pickup
-		$.ajax({
-			type: "POST",
-			contentType: "application/json",
-			dataType: "json",
-			url: pickUrl,
-			data: JSON.stringify({
-				"id": pid
-			}),
-			error: function (textStatus) {
-				console.log(textStatus);
-			},
-			success: function (data) {
-				sim = data;
-			}
-		});
 	};
 
 	// draw endroll
