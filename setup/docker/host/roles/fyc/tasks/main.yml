@@ -34,6 +34,7 @@
     - tail_logs.sh
     - tune_camera.sh
     - tune_robot.sh
+    - reset_model.sh
 
 - name: Copy config files
   template:

@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+curl -sf -X POST http://localhost:18000/api/_reset > /dev/null 2>&1
+if [ $? != 0 ]; then
+  echo "Failed to reset."
+  exit 1
+fi
+echo "Successfully reset."
+exit 0
