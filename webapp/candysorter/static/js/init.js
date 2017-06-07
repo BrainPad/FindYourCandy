@@ -12,15 +12,22 @@ $(function () {
 
 	// variables
 	var recognition = new webkitSpeechRecognition();
-	var lang = "en"; // language seting
 	var speechTxt = "I like chewy chocolate candy";
 	var sim = "";
 	var winW = window.innerWidth;
 	var winH = window.innerHeight;
 
+	// language setting
+	var lang = window.sessionStorage.getItem("lang");
+	if (lang === null) {
+		lang = "en";
+		window.sessionStorage.setItem("lang", lang);
+	}
+
 	// process of voice recognition
 	var speech = function () {
 		$("body").addClass("mode-speech-start");
+		$(".speech-lang a").text(lang == "en" ? "EN": "JP");
 		recognition.lang = lang;
 		$(".speech-mic").click(function () {
 			$("body").addClass("mode-speech-in");
@@ -48,6 +55,7 @@ $(function () {
 			$(this).text("EN");
 			lang = "en";
 		}
+		window.sessionStorage.setItem("lang", lang);
 		$("body").addClass("mode-" + lang);
 		recognition.lang = lang;
 		return false;

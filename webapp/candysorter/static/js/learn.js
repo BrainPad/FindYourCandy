@@ -12,11 +12,17 @@ $(function () {
 	var loadSec = 2000; //　Time lag for loading screen test (return to 0 in prd environment)
 
 	// variables
-	var lang = "en"; // language seting
 	var stepFlg = 0; // capture step
 	var capDat = []; // save capture data
 	var winW = window.innerWidth;
 	var winH = window.innerHeight;
+
+	// language setting
+	var lang = window.sessionStorage.getItem("lang");
+	if (lang === null) {
+		lang = "en";
+		window.sessionStorage.setItem("lang", lang);
+	}
 
 	// switch language
 	$("body").addClass("mode-" + lang);
@@ -29,6 +35,7 @@ $(function () {
 			$(this).text("EN");
 			lang = "en";
 		}
+		window.sessionStorage.setItem("lang", lang);
 		$("body").addClass("mode-" + lang);
 		return false;
 	});
@@ -36,6 +43,7 @@ $(function () {
 	// processing capture mode
 	var cap = function () {
 		$("body").addClass("mode-cap-init");
+		$(".cap-lang a").text(lang == "en" ? "EN": "JP");
 	};
 	$(".cap-start, .cap-retry").click(function () {
 		$("body").addClass("mode-loading");
