@@ -38,7 +38,9 @@ $(function () {
 	}
 
 	// switch language
+	$("body").addClass("mode-" + lang);
 	$(".speech-lang a").click(function () {
+		$("body").removeClass("mode-en mode-ja");
 		if ($(this).text() == "EN") {
 			$(this).text("JP");
 			lang = "ja";
@@ -46,6 +48,7 @@ $(function () {
 			$(this).text("EN");
 			lang = "en";
 		}
+		$("body").addClass("mode-" + lang);
 		recognition.lang = lang;
 		return false;
 	});
@@ -66,7 +69,9 @@ $(function () {
 				"lang": lang
 			}),
 			error: function (jqXHR, textStatus) {
-				if (textStatus == 'abort') { return; }
+				if (textStatus == 'abort') {
+					return;
+				}
 				console.log(jqXHR);
 				if (simXHR !== null && simXHR.readyState > 0 && simXHR.readyState < 4) {
 					simAjax.abort();
@@ -155,7 +160,9 @@ $(function () {
 				"lang": lang
 			}),
 			error: function (jqXHR, textStatus) {
-				if (textStatus == 'abort') { return; }
+				if (textStatus == 'abort') {
+					return;
+				}
 				console.log(jqXHR);
 				if (morXHR !== null && morXHR.readyState > 0 && morXHR.readyState < 4) {
 					morXHR.abort();

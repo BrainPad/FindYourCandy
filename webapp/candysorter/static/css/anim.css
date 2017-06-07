@@ -3,7 +3,7 @@
 .speech { opacity: 0; transition: all .3s; }
 .mode-speech-start .speech { opacity: 1; }
 .mode-nl-loaded .speech,
-.mode-nl-repeat .speech{ opacity: 0; transform: translate(-100px, 0); }
+.mode-nl-repeat .speech { opacity: 0; transform: translate(-100px, 0); }
 /* speech in/out */
 .mode-speech-in .speech-mic { animation: speech-in .8s infinite alternate; }
 @keyframes speech-in {
@@ -162,3 +162,74 @@ stroke-dashoffset: 0;
 .mode-sorry-t-start .cap,
 .mode-sorry-t-start .train { height: 0; opacity: 0; }
 .mode-sorry-t-end .sorry { height: 100%; opacity: 1; }
+/* subtitle */
+.subtitles { position: absolute; left: 0; bottom: 10%; width: 100%; text-align: center; z-index: 99; }
+.subtitles > div { display: none; padding: 20px 30px; border-radius: 5px; background-color: rgba(0,0,0,0.5); background-position: 30px 50%; background-repeat: no-repeat; animation-duration: .3s; animation-fill-mode: forwards; }
+@keyframes subs {
+0% {
+opacity: 0;
+transform: translate(0, 50px);
+}
+100% {
+opacity: 1;
+transform: translate(0, 0);
+}
+}
+@keyframes subs-instant {
+0% {
+opacity: 0;
+transform: translate(0, 50px);
+}
+5% {
+opacity: 1;
+transform: translate(0, 0);
+}
+95% {
+opacity: 1;
+transform: translate(0, 0);
+}
+100% {
+opacity: 0;
+transform: translate(0, 50px);
+}
+}
+/* subtitle predict */
+.mode-speech-start .subs-start { display: inline-block; animation-name: subs; }
+.mode-speech-in .subs-start { display: none; }
+.mode-speech-in .subs-speech { display: inline-block; animation-name: subs; }
+.mode-speech-out .subs-speech { display: none; }
+.mode-speech-out .subs-nl { display: inline-block; animation-name: subs; }
+.mode-force-start .subs-nl { display: none; }
+.mode-force-start .subs-force { display: inline-block; animation-name: subs; }
+.mode-plot-end .subs-force { display: none; }
+.mode-plot-end .subs-plot { display: inline-block; animation-name: subs; }
+.mode-thanks-start .subs-plot { display: none; }
+.mode-thanks-btn .subs-end { display: inline-block; animation-name: subs; }
+/* subtitle learn */
+.mode-cap-init .subs-learn { display: inline-block; animation-name: subs; }
+.mode-cap-steps .subs-learn { display: none; }
+.mode-cap-steps .subs-cap { display: inline-block; animation-name: subs; }
+.mode-train .subs-cap { display: none; }
+.mode-train .subs-train { display: inline-block; animation-name: subs; }
+.mode-train-v3 .subs-train { display: none; }
+.mode-train-v3 .subs-v3 { display: inline-block; animation-name: subs; }
+.mode-stat .subs-v3 { display: none; }
+.mode-stat .subs-stat { display: inline-block; animation-name: subs-instant; animation-duration: 5s; }
+.mode-stat-end .subs-stat { display: none; }
+.mode-stat-end .subs-learn-end { display: inline-block; animation-name: subs; }
+/* subtitle icon */
+.subtitles .subs-speech,
+.subtitles .subs-nl,
+.subtitles .subs-cap,
+.subtitles .subs-stat { padding-left: 90px; background-image: url(/static/images/ico-ml.svg); text-align: left; }
+.subtitles .subs-v3 { padding-left: 90px; background-image: url(/static/images/ico-tf.png); background-size: 40px; text-align: left; }
+/* subtitle lang */
+.subtitles .en { font-size: 18px; }
+.mode-en .subtitles .en,
+.mode-ja .subtitles .ja { display: block; }
+.mode-ja .subtitles .en,
+.mode-en .subtitles .ja { display: none; }
+/* sorry  */
+.mode-sorry-r .loading,
+.mode-sorry-r .reset { height: 0; opacity: 0; }
+.mode-sorry-r .sorry { height: 100%; opacity: 1; }

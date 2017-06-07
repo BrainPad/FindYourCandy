@@ -12,10 +12,26 @@ $(function () {
 	var loadSec = 2000; //　Time lag for loading screen test (return to 0 in prd environment)
 
 	// variables
+	var lang = "en"; // language seting
 	var stepFlg = 0; // capture step
 	var capDat = []; // save capture data
 	var winW = window.innerWidth;
 	var winH = window.innerHeight;
+
+	// switch language
+	$("body").addClass("mode-" + lang);
+	$(".cap-lang a").click(function () {
+		$("body").removeClass("mode-en mode-ja");
+		if ($(this).text() == "EN") {
+			$(this).text("JP");
+			lang = "ja";
+		} else {
+			$(this).text("EN");
+			lang = "en";
+		}
+		$("body").addClass("mode-" + lang);
+		return false;
+	});
 
 	// processing capture mode
 	var cap = function () {
@@ -69,7 +85,7 @@ $(function () {
 	});
 
 	// start learning
-  var trainStarted = false;
+	var trainStarted = false;
 	var train = function () {
 		$("body").addClass("mode-train");
 		// start request
@@ -87,7 +103,7 @@ $(function () {
 				sorry();
 			},
 			success: function (data) {
-        trainStarted = true;
+				trainStarted = true;
 			}
 		});
 		// draw package images
@@ -126,9 +142,9 @@ $(function () {
 	var compFlg = false; // status
 	var statTimer = setInterval(function () {}, 100);
 	var statPost = function () {
-    if (!trainStarted) {
-      return;
-    }
+		if (!trainStarted) {
+			return;
+		}
 		if (compFlg) {
 			clearInterval(statTimer);
 		} else {

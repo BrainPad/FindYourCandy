@@ -101,6 +101,10 @@ polygon.label-10 { stroke: #FFEE58; }
 .cap-right { display: flex; justify-content: center; align-items: center; float: left; width: 50%; height: 100%; text-align: center; }
 .cap-init .cap-left { background: url(/static/images/pic-cap.png) center center no-repeat #333; background-size: 512px; }
 .cap-init { font-size: 24px; }
+.cap-lang { position: absolute; top: 0; right: 0; font-size: 16px; font-weight: 300; width: 50px; height: 50px; line-height: 50px; background: #333; text-align: center; }
+.cap-lang a { display: block; color: #999; height: 100%; }
+.cap-reset { margin: 40px 0; }
+.cap-reset a { color: #999; font-size: 16px; }
 .cap-footer { position: absolute; bottom: 30px; width: 100%; font-size: 16px; text-align: center; }
 .cap-footer a { color: #999; }
 .cap-steps .cap-left { font-size: 36px; background: #333; }
@@ -141,3 +145,7 @@ polygon.label-10 { stroke: #FFEE58; }
 /* stat plot */
 .plot-label { position: absolute; bottom: 20px; width: 100%; text-align: center; }
 .plot-label dd { display: inline-block; height: 20px; line-height: 20px; margin: 3px; padding: 0 10px; border-radius: 10px; opacity: 0.8; }
+/* reset */
+.reset { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
+.reset-footer { position: absolute; bottom: 30px; font-size: 16px; font-weight: 300; width: 100%; text-align: center; z-index: 2; }
+.reset-footer a { color: #999; }

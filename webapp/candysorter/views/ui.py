@@ -44,6 +44,11 @@ def learn():
     return current_app.send_static_file('learn.html')
 
 
+@ui.route('/reset')
+def reset():
+    return current_app.send_static_file('reset.html')
+
+
 @ui.route('/image/<path:filename>')
 def image(filename):
     return send_from_directory(config['DOWNLOAD_IMAGE_DIR'], filename)

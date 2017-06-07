@@ -20,10 +20,12 @@
   <div class="cap-init">
     <div class="cap-left"></div>
     <div class="cap-right">
+      <div class="cap-lang"><a href="#">EN</a></div>
       <div>
         <p>Please put labels and candies<br>
           on the table, then start.</p>
         <p><a href="#" class="btn cap-start">START</a></p>
+        <p class="cap-reset"><a href="/reset">DATA REFRESH</a></p>
       </div>
       <div class="cap-footer"><a href="/predict">SWITCH TO SERVING</a></div>
     </div>
@@ -94,6 +96,37 @@
       <p>Sorry, something went wrong.</p>
       <p><a href="/learn" class="btn btn-g">TRY AGAIN</a></p>
     </div>
+  </div>
+</div>
+<div class="subtitles">
+  <div class="subs-learn">
+    <div class="ja">ここではサービングモードで使用する学習データを作成します。<br>
+      テーブルにラベルとキャンディーを並べてください。</div>
+    <div class="en">This mode creates learning data to use in the serving mode.</div>
+  </div>
+  <div class="subs-cap">
+    <div class="ja">Cloud Vision APIによりラベルの解析を行っています。<br>
+      ラベルとキャンディーを変更し、繰り返し処理を行ってください。</div>
+    <div class="en">Analyzing labels with Cloud Vision API.<br>
+      Please change labels and candies and repeat.</div>
+  </div>
+  <div class="subs-train">
+    <div class="ja">取得データをアップロードしています。</div>
+    <div class="en">Uploading the generated data.</div>
+  </div>
+  <div class="subs-v3">
+    <div class="ja">TensorFlowのInception-v3を使用し、画像を分類します。</div>
+    <div class="en">Using TensorFlow's Inception-v3, it classifies the images.</div>
+  </div>
+  <div class="subs-stat">
+    <div class="ja">Cloud Machine Learning Engineを使用し、<br>
+      ラベルとキャンディーの関係性を学習しています。</div>
+    <div class="en">Using the Cloud Machine Learning Engine,<br>
+      it learns the relationship between labels and candies. </div>
+  </div>
+  <div class="subs-learn-end">
+    <div class="ja">学習したデータは、サービングモードにご利用いただけます。</div>
+    <div class="en">Learned data can be used for the serving mode.</div>
   </div>
 </div>
 </body>
